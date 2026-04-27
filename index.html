@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Smartlink</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-light: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --cloud: #7c3aed;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+        body { background: var(--bg-light); color: var(--text-main); min-height: 100vh; padding: 24px 16px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 28px; }
+        header h1 { font-size: 1.6rem; color: var(--primary); margin-bottom: 6px; }
+        header p { color: var(--text-sub); font-size: 0.9rem; }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 10px; padding: 18px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-sub); }
+        .stat-value { font-size: 1.6rem; font-weight: 700; margin-top: 6px; color: var(--text-main); }
+        .stat-value.money { color: var(--success); }
+        .stat-value.small { font-size: 1.1rem; }
+
+        .card {
+            background: var(--surface); border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+            padding: 20px 24px; margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+        }
+        .section-header h2 { font-size: 1.05rem; color: var(--text-main); }
+        .search-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+        input[type="text"] {
+            padding: 8px 12px; border: 1px solid var(--border);
+            border-radius: 6px; font-size: 0.9rem; width: 200px; transition: border-color 0.2s;
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+
+        button {
+            padding: 8px 16px; border: none; border-radius: 6px;
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-refresh { background: var(--primary); color: white; }
+        .btn-refresh:hover { background: #1d4ed8; }
+        .btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; white-space: nowrap; }
+        thead { background: #f1f5f9; }
+        th, td { padding: 11px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; color: var(--text-sub); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.4px; }
+        td.right, th.right { text-align: right; }
+        td.center, th.center { text-align: center; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+
+        .badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; background: #e0f2fe; color: #0369a1; }
+
+        .status-bar {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 16px;
+        }
+        .status-bar.loading { background: #f5f3ff; color: var(--cloud); border: 1px solid #ddd6fe; }
+        .status-bar.ok      { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+        .status-bar.err     { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .status-bar.hidden  { display: none; }
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .dot.ok      { background: #15803d; }
+        .dot.err     { background: #b91c1c; }
+        .dot.loading { background: var(--cloud); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+            border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .skeleton-row td { padding: 14px 15px; }
+        .skel {
+            height: 14px; border-radius: 4px;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%; animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        .sync-info { font-size: 0.78rem; color: var(--text-sub); margin-top: 12px; text-align: right; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-sub); }
+        .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .empty-state p { font-size: 0.95rem; }
+
+        footer { text-align: center; margin-top: 30px; font-size: 0.78rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1></h1>
+        <p></p>
+    </header>
+
+    <div class="status-bar hidden" id="statusBar">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusMsg"></span>
+    </div>
+
+    <div class="summary-grid" id="summaryGrid" style="display:none;">
+        <div class="stat-card">
+            <div class="stat-label">Total IDR</div>
+            <div class="stat-value money" id="sumNet">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Leads</div>
+            <div class="stat-value" id="sumLeads">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">click ID</div>
+            <div class="stat-value" id="sumLinks">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Rate USD / IDR</div>
+            <div class="stat-value small" id="sumRate">—</div>
+        </div>
+    </div>
+
+    <div class="card" id="tableCard" style="display:none;">
+        <div class="section-header">
+            <h2></h2>
+            <div class="search-wrap">
+                <input type="text" id="searchBox" placeholder="Cari ID..." oninput="filterTable()">
+                <button class="btn-refresh" id="btnRefresh" onclick="loadData()">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:44px;">No</th>
+                        <th>Smartlink ID</th>
+                        <th class="center">Leads</th>
+                        <th class="right">Payout (USD)</th>
+                        <th class="right">Gross IDR</th>
+                        <th class="right">Admin</th>
+                        <th class="right">total akhir</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="sync-info" id="syncInfo"></div>
+    </div>
+
+    <footer></footer>
+</div>
+
+<script>
+    const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+    const BIN_ID      = '69ef0756aaba882197408750';
+    const ACCESS_KEY  = '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
+    let allRows = [];
+
+    const fmt = {
+        usd:  v => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(v),
+        idr:  v => new Intl.NumberFormat('id-ID', {style:'currency', currency:'IDR', maximumFractionDigits:0}).format(v),
+        rate: v => new Intl.NumberFormat('id-ID').format(v)
+    };
+
+    window.addEventListener('load', () => loadData());
+
+    async function loadData() {
+        setStatus('loading', 'Memuat data dari cloud...');
+        const btn = document.getElementById('btnRefresh');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Memuat...';
+        showSkeleton();
+
+        try {
+            const res = await fetch(`${JSONBIN_BASE}/b/${BIN_ID}/latest`, {
+                headers: { 'X-Access-Key': ACCESS_KEY }
+            });
+
+            if (!res.ok) {
+                const errBody = await res.json().catch(() => ({}));
+                if (res.status === 401 || res.status === 403) throw new Error('Access Key tidak valid atau tidak punya izin baca.');
+                if (res.status === 404) throw new Error('Bin tidak ditemukan — pastikan admin sudah menyimpan data.');
+                throw new Error(errBody.message || `HTTP ${res.status}`);
+            }
+
+            const result = await res.json();
+
+            // JSONBin v3: response bisa { record: {...}, metadata: {...} }
+            // atau langsung object jika pakai X-Bin-Meta:false
+            // Pakai nullish coalescing agar aman di kedua kondisi
+            const data = (result && result.record !== undefined) ? result.record : result;
+
+            if (!data || !Array.isArray(data.rows) || data.rows.length === 0) {
+                setStatus('err', 'Data masih kosong — admin belum menyimpan data ke bin ini.');
+                hideTables();
+                return;
+            }
+
+            allRows = [...data.rows].sort((a, b) => b.finalNetIDR - a.finalNetIDR);
+
+            let totalNet = 0, totalLeads = 0;
+            allRows.forEach(r => { totalNet += r.finalNetIDR; totalLeads += r.count; });
+
+            document.getElementById('sumNet').textContent   = fmt.idr(totalNet);
+            document.getElementById('sumLeads').textContent = totalLeads.toLocaleString('id-ID');
+            document.getElementById('sumLinks').textContent = allRows.length;
+            document.getElementById('sumRate').textContent  = data.rate ? `Rp ${fmt.rate(data.rate)}` : '—';
+
+            document.getElementById('summaryGrid').style.display = '';
+            document.getElementById('tableCard').style.display   = '';
+
+            renderTable(allRows);
+
+            const savedAt = data.savedAt ? new Date(data.savedAt).toLocaleString('id-ID') : '—';
+            document.getElementById('syncInfo').textContent = `Terakhir diperbarui admin: ${savedAt} · Dimuat: ${new Date().toLocaleString('id-ID')}`;
+            setStatus('ok', `Data berhasil dimuat — ${allRows.length} Smartlink ID`);
+
+        } catch (err) {
+            setStatus('err', 'Gagal memuat data: ' + err.message);
+            hideTables();
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refresh';
+        }
+    }
+
+    function renderTable(rows) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        if (rows.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🔍</div><p>Tidak ada data yang cocok.</p></div></td></tr>`;
+            return;
+        }
+        rows.forEach((item, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="color:var(--text-sub);font-size:0.85rem;">${i + 1}</td>
+                <td><span class="badge">${esc(String(item.id))}</span></td>
+                <td class="center">${item.count.toLocaleString('id-ID')}</td>
+                <td class="right" style="color:var(--text-sub);">${fmt.usd(item.totalPayoutUSD)}</td>
+                <td class="right">${fmt.idr(item.grossIDR)}</td>
+                <td class="right" style="color:var(--danger);font-size:0.85rem;">${item.adminPercent}%</td>
+                <td class="right" style="font-weight:700;color:var(--success);">${fmt.idr(item.finalNetIDR)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterTable() {
+        const q = document.getElementById('searchBox').value.toLowerCase();
+        renderTable(allRows.filter(r => String(r.id).toLowerCase().includes(q)));
+    }
+
+    function showSkeleton() {
+        document.getElementById('summaryGrid').style.display = '';
+        document.getElementById('tableCard').style.display = '';
+        ['sumNet','sumLeads','sumLinks','sumRate'].forEach(id => document.getElementById(id).textContent = '—');
+        let rows = '';
+        for (let i = 0; i < 6; i++) {
+            rows += `<tr class="skeleton-row">
+                <td><div class="skel" style="width:20px;"></div></td>
+                <td><div class="skel" style="width:100px;"></div></td>
+                <td><div class="skel" style="width:40px;margin:0 auto;"></div></td>
+                <td><div class="skel" style="width:80px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:110px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:40px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:120px;margin-left:auto;"></div></td>
+            </tr>`;
+        }
+        document.getElementById('tableBody').innerHTML = rows;
+    }
+
+    function hideTables() {
+        document.getElementById('summaryGrid').style.display = 'none';
+        document.getElementById('tableCard').style.display = 'none';
+    }
+
+    function setStatus(type, msg) {
+        const bar = document.getElementById('statusBar');
+        bar.className = `status-bar ${type}`;
+        document.getElementById('statusDot').className = `dot ${type}`;
+        document.getElementById('statusMsg').textContent = msg;
+    }
+
+    function esc(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+</script>
+</body>
+</html>
