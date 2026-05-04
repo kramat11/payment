@@ -3,140 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hasil Smartlink</title>
+    <title>Payment Report Greysya</title>
+    <!-- Font Inter untuk tampilan modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♾️</text></svg>">
     <style>
         :root {
-            --primary: #2563eb;
-            --bg-light: #f8fafc;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text-main: #1e293b;
+            /* Palette Modern (Tailwind-like) */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-soft: #eff6ff;
+            
+            --text-main: #0f172a;
             --text-sub: #64748b;
+            --text-light: #94a3b8;
+            
+            --border: #e2e8f0;
+            
             --success: #10b981;
+            --success-bg: #ecfdf5;
             --danger: #ef4444;
-            --cloud: #7c3aed;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-        body { background: var(--bg-light); color: var(--text-main); min-height: 100vh; padding: 24px 16px; }
-        .container { max-width: 1100px; margin: 0 auto; }
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            padding: 32px 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-        header { text-align: center; margin-bottom: 28px; }
-        header h1 { font-size: 1.6rem; color: var(--primary); margin-bottom: 6px; }
-        header p { color: var(--text-sub); font-size: 0.9rem; }
+        .container { 
+            width: 100%; 
+            max-width: 1100px; 
+        }
 
+        /* HEADER */
+        header { 
+            text-align: center; 
+            margin-bottom: 32px;
+        }
+        header h1 { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        header p { 
+            color: var(--text-sub); 
+            font-size: 0.95rem; 
+            font-weight: 400;
+        }
+
+        /* STATUS BAR (Toasts) */
+        .status-bar {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 500;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        .status-bar.hidden { display: none; }
+        
+        .status-bar.loading { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .status-bar.ok      { background: var(--success-bg); color: #065f46; border: 1px solid #a7f3d0; }
+        .status-bar.err     { background: var(--danger-bg); color: #991b1b; border: 1px solid #fecaca; }
+
+        /* DASHBOARD CARDS (SUMMARY) */
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px; margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; 
+            margin-bottom: 24px;
         }
         .stat-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 10px; padding: 18px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .stat-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-sub); }
-        .stat-value { font-size: 1.6rem; font-weight: 700; margin-top: 6px; color: var(--text-main); }
-        .stat-value.money { color: var(--success); }
-        .stat-value.small { font-size: 1.1rem; }
-
-        .card {
-            background: var(--surface); border-radius: 12px;
+            background: var(--bg-card); 
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
-            padding: 20px 24px; margin-bottom: 20px;
+            border-radius: 16px; 
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        .stat-label { 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            color: var(--text-sub); 
+            margin-bottom: 8px;
+        }
+        .stat-value { 
+            font-size: 1.75rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            line-height: 1.2;
+        }
+        .stat-value.money { color: var(--success); }
+        .stat-value.small { font-size: 1.25rem; }
+
+        /* MAIN CARD (TABLE) */
+        .card {
+            background: var(--bg-card); 
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden; /* For rounded corners on table */
         }
 
         .section-header {
             display: flex; justify-content: space-between;
-            align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+            align-items: center; 
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+            background: #fafafa;
         }
-        .section-header h2 { font-size: 1.05rem; color: var(--text-main); }
-        .search-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .section-header h2 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+        }
 
+        .search-wrap { display: flex; gap: 12px; align-items: center; }
+
+        /* INPUTS & BUTTONS */
         input[type="text"] {
-            padding: 8px 12px; border: 1px solid var(--border);
-            border-radius: 6px; font-size: 0.9rem; width: 200px; transition: border-color 0.2s;
+            padding: 10px 16px; 
+            border: 1px solid var(--border);
+            border-radius: 10px; 
+            font-size: 0.9rem; 
+            width: 220px; 
+            background: white;
+            transition: all 0.2s;
+            color: var(--text-main);
         }
-        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        input[type="text"]:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
         button {
-            padding: 8px 16px; border: none; border-radius: 6px;
-            cursor: pointer; font-weight: 600; font-size: 0.85rem;
-            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 10px;
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: all 0.2s;
         }
-        .btn-refresh { background: var(--primary); color: white; }
-        .btn-refresh:hover { background: #1d4ed8; }
-        .btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-refresh { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        .btn-refresh:hover { 
+            background: var(--primary-hover); 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+        }
+        .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; white-space: nowrap; }
-        thead { background: #f1f5f9; }
-        th, td { padding: 11px 15px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-weight: 600; color: var(--text-sub); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.4px; }
-        td.right, th.right { text-align: right; }
-        td.center, th.center { text-align: center; }
+        /* TABLE STYLING */
+        .table-wrap { overflow-x: auto; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.9rem; 
+            white-space: nowrap; 
+        }
+        thead { 
+            background: #f8fafc; 
+        }
+        th { 
+            padding: 16px 24px; 
+            text-align: left; 
+            font-weight: 600; 
+            color: var(--text-sub); 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+        td { 
+            padding: 16px 24px; 
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #f8fafc; }
 
-        .badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; background: #e0f2fe; color: #0369a1; }
+        /* ALIGNMENTS */
+        td.right, th.right { text-align: right; }
+        td.center, th.center { text-align: center; }
 
-        .status-bar {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 16px;
+        /* BADGES & COLORS */
+        .badge { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            background: var(--primary-soft); 
+            color: var(--primary); 
+            letter-spacing: 0.02em;
         }
-        .status-bar.loading { background: #f5f3ff; color: var(--cloud); border: 1px solid #ddd6fe; }
-        .status-bar.ok      { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-        .status-bar.err     { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-        .status-bar.hidden  { display: none; }
 
-        .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .dot.ok      { background: #15803d; }
-        .dot.err     { background: #b91c1c; }
-        .dot.loading { background: var(--cloud); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        /* ANIMATIONS */
+        .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .dot.ok { background: var(--success); box-shadow: 0 0 0 2px var(--success-bg); }
+        .dot.err { background: var(--danger); box-shadow: 0 0 0 2px var(--danger-bg); }
+        .dot.loading { background: var(--primary); animation: pulse 1.2s infinite; }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
         .spinner {
-            display: inline-block; width: 14px; height: 14px;
-            border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
-            border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+            display: inline-block; width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+            border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .skeleton-row td { padding: 14px 15px; }
+        /* SKELETON LOADING */
+        .skeleton-row td { padding: 18px 24px; }
         .skel {
-            height: 14px; border-radius: 4px;
+            height: 16px; border-radius: 4px;
             background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-            background-size: 200% 100%; animation: shimmer 1.4s infinite;
+            background-size: 200% 100%; animation: shimmer 1.5s infinite;
         }
         @keyframes shimmer { to { background-position: -200% 0; } }
 
-        .sync-info { font-size: 0.78rem; color: var(--text-sub); margin-top: 12px; text-align: right; }
-
+        /* EMPTY STATE */
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-sub); }
-        .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
-        .empty-state p { font-size: 0.95rem; }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 1rem; }
 
-        footer { text-align: center; margin-top: 30px; font-size: 0.78rem; color: #94a3b8; }
+        .sync-info { 
+            font-size: 0.8rem; 
+            color: var(--text-light); 
+            padding: 16px 28px; 
+            background: #fafafa;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between;
+        }
+
+        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: var(--text-light); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .search-wrap { width: 100%; }
+            .search-wrap input { width: 100%; }
+            .summary-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
 
     <header>
-        <h1></h1>
-        <p></p>
+        <h1>📊 Report Greysyaa</h1>
+        <p>conversion satu minggu</p>
     </header>
 
+    <!-- Status Notification -->
     <div class="status-bar hidden" id="statusBar">
         <span class="dot" id="statusDot"></span>
         <span id="statusMsg"></span>
     </div>
 
+    <!-- Summary Cards -->
     <div class="summary-grid" id="summaryGrid" style="display:none;">
         <div class="stat-card">
-            <div class="stat-label">Total IDR</div>
+            <div class="stat-label">Total Pendapatan</div>
             <div class="stat-value money" id="sumNet">—</div>
         </div>
         <div class="stat-card">
@@ -144,49 +299,53 @@
             <div class="stat-value" id="sumLeads">—</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">click ID</div>
+            <div class="stat-label">Total UserID</div>
             <div class="stat-value" id="sumLinks">—</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Rate USD / IDR</div>
+            <div class="stat-label">Rate Kurs (USD)</div>
             <div class="stat-value small" id="sumRate">—</div>
         </div>
     </div>
 
+    <!-- Main Table Card -->
     <div class="card" id="tableCard" style="display:none;">
         <div class="section-header">
-            <h2></h2>
+            <h2>Detail Transaksi</h2>
             <div class="search-wrap">
-                <input type="text" id="searchBox" placeholder="Cari ID..." oninput="filterTable()">
+                <input type="text" id="searchBox" placeholder="Cari Smartlink ID..." oninput="filterTable()">
                 <button class="btn-refresh" id="btnRefresh" onclick="loadData()">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     Refresh
                 </button>
             </div>
         </div>
+        
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th style="width:44px;">No</th>
-                        <th>Smartlink ID</th>
+                        <th style="width:50px;">No</th>
+                        <th>UserID ID</th>
                         <th class="center">Leads</th>
                         <th class="right">Payout (USD)</th>
                         <th class="right">Gross IDR</th>
-                        <th class="right">Admin</th>
-                        <th class="right">total akhir</th>
+                        <th class="right">Admin Fee</th>
+                        <th class="right">Total Akhir</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
+
         <div class="sync-info" id="syncInfo"></div>
     </div>
 
-    <footer></footer>
+    <footer>Powered by Report Greysya</footer>
 </div>
 
 <script>
+    // --- KONFIGURASI & LOGIC (TIDAK DIUBAH) ---
     const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
     const BIN_ID      = '69ef0756aaba882197408750';
     const ACCESS_KEY  = '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
@@ -201,7 +360,7 @@
     window.addEventListener('load', () => loadData());
 
     async function loadData() {
-        setStatus('loading', 'Memuat data dari cloud...');
+        setStatus('loading', 'Memuat data terbaru...');
         const btn = document.getElementById('btnRefresh');
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Memuat...';
@@ -220,10 +379,6 @@
             }
 
             const result = await res.json();
-
-            // JSONBin v3: response bisa { record: {...}, metadata: {...} }
-            // atau langsung object jika pakai X-Bin-Meta:false
-            // Pakai nullish coalescing agar aman di kedua kondisi
             const data = (result && result.record !== undefined) ? result.record : result;
 
             if (!data || !Array.isArray(data.rows) || data.rows.length === 0) {
@@ -242,21 +397,24 @@
             document.getElementById('sumLinks').textContent = allRows.length;
             document.getElementById('sumRate').textContent  = data.rate ? `Rp ${fmt.rate(data.rate)}` : '—';
 
-            document.getElementById('summaryGrid').style.display = '';
-            document.getElementById('tableCard').style.display   = '';
+            document.getElementById('summaryGrid').style.display = 'grid';
+            document.getElementById('tableCard').style.display   = 'block';
 
             renderTable(allRows);
 
             const savedAt = data.savedAt ? new Date(data.savedAt).toLocaleString('id-ID') : '—';
-            document.getElementById('syncInfo').textContent = `Terakhir diperbarui admin: ${savedAt} · Dimuat: ${new Date().toLocaleString('id-ID')}`;
-            setStatus('ok', `Data berhasil dimuat — ${allRows.length} Smartlink ID`);
+            document.getElementById('syncInfo').innerHTML = `
+                <span>Terakhir update Admin: <strong>${savedAt}</strong></span>
+                <span>Dimuat: <strong>${new Date().toLocaleString('id-ID')}</strong></span>
+            `;
+            setStatus('ok', `Data berhasil dimuat — ${allRows.length} CLICKID`);
 
         } catch (err) {
             setStatus('err', 'Gagal memuat data: ' + err.message);
             hideTables();
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refresh';
+            btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refresh';
         }
     }
 
@@ -264,19 +422,20 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
         if (rows.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🔍</div><p>Tidak ada data yang cocok.</p></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🔍</div><p>Tidak ada data yang cocok dengan pencarian Anda.</p></div></td></tr>`;
             return;
         }
         rows.forEach((item, i) => {
             const tr = document.createElement('tr');
+            // Sedikit styling inline untuk angka agar lebih mudah dibaca
             tr.innerHTML = `
                 <td style="color:var(--text-sub);font-size:0.85rem;">${i + 1}</td>
                 <td><span class="badge">${esc(String(item.id))}</span></td>
-                <td class="center">${item.count.toLocaleString('id-ID')}</td>
-                <td class="right" style="color:var(--text-sub);">${fmt.usd(item.totalPayoutUSD)}</td>
-                <td class="right">${fmt.idr(item.grossIDR)}</td>
+                <td class="center" style="font-weight:600; color:var(--text-main);">${item.count.toLocaleString('id-ID')}</td>
+                <td class="right" style="color:var(--text-sub);font-size:0.85rem;">${fmt.usd(item.totalPayoutUSD)}</td>
+                <td class="right" style="font-family:'Courier New', monospace; font-weight:500;">${fmt.idr(item.grossIDR)}</td>
                 <td class="right" style="color:var(--danger);font-size:0.85rem;">${item.adminPercent}%</td>
-                <td class="right" style="font-weight:700;color:var(--success);">${fmt.idr(item.finalNetIDR)}</td>
+                <td class="right" style="font-weight:700;color:var(--success);font-size:1rem;">${fmt.idr(item.finalNetIDR)}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -288,19 +447,19 @@
     }
 
     function showSkeleton() {
-        document.getElementById('summaryGrid').style.display = '';
-        document.getElementById('tableCard').style.display = '';
+        document.getElementById('summaryGrid').style.display = 'grid';
+        document.getElementById('tableCard').style.display = 'block';
         ['sumNet','sumLeads','sumLinks','sumRate'].forEach(id => document.getElementById(id).textContent = '—');
         let rows = '';
         for (let i = 0; i < 6; i++) {
             rows += `<tr class="skeleton-row">
-                <td><div class="skel" style="width:20px;"></div></td>
-                <td><div class="skel" style="width:100px;"></div></td>
-                <td><div class="skel" style="width:40px;margin:0 auto;"></div></td>
-                <td><div class="skel" style="width:80px;margin-left:auto;"></div></td>
-                <td><div class="skel" style="width:110px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:25px;"></div></td>
+                <td><div class="skel" style="width:80px;"></div></td>
+                <td><div class="skel" style="width:30px;margin:0 auto;"></div></td>
+                <td><div class="skel" style="width:70px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:100px;margin-left:auto;"></div></td>
                 <td><div class="skel" style="width:40px;margin-left:auto;"></div></td>
-                <td><div class="skel" style="width:120px;margin-left:auto;"></div></td>
+                <td><div class="skel" style="width:100px;margin-left:auto;"></div></td>
             </tr>`;
         }
         document.getElementById('tableBody').innerHTML = rows;
