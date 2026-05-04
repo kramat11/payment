@@ -212,7 +212,7 @@
         td.right, th.right { text-align: right; }
         td.center, th.center { text-align: center; }
 
-        /* BADGES & COLORS */
+        /* BADGES & COLORS - DENGAN ANIMASI GARIS EMAS */
         .badge { 
             display: inline-flex; 
             align-items: center; 
@@ -225,17 +225,59 @@
             color: var(--primary); 
             letter-spacing: 0.02em;
             transition: all 0.2s;
+            
+            /* Setup untuk animasi border */
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* Pseudo-element untuk garis emas bergerak */
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%);
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                #FFD700 /* Warna Emas */
+            );
+            animation: rotateBorder 3s linear infinite;
+            z-index: -2; /* Di bawah background badge */
+            border-radius: 50%; /* Bentuk lingkaran untuk rotasi */
         }
         
+        /* Background utama badge (biru) menutupi tengah gradient, menyisakan pinggiran */
+        .badge::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            background: var(--primary-soft);
+            border-radius: 4px; /* Sedikit lebih kecil dari parent */
+            z-index: -1; /* Di atas gradient ::before */
+        }
+
+        /* Efek Hover sedikit mempercepat rotasi atau mengubah warna */
+        .badge:hover {
+            transform: translateY(-2px);
+            cursor: pointer;
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
         .clickable-id {
             cursor: pointer;
             text-decoration: underline;
             text-decoration-style: dotted;
             text-underline-offset: 4px;
-        }
-        .clickable-id:hover {
-            background: #dbeafe;
-            transform: translateY(-1px);
         }
 
         /* ANIMATIONS */
