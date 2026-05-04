@@ -184,24 +184,32 @@
         table { 
             width: 100%; 
             border-collapse: collapse; 
-            font-size: 0.9rem; 
+            
+            /* --- PERUBAHAN FONT --- */
+            font-family: 'Times New Roman', Times, serif; 
+            
+            /* --- PERKECIL FONT --- */
+            font-size: 0.75rem; 
+             
             white-space: nowrap; 
         }
         thead { 
             background: #f8fafc; 
         }
         th { 
-            padding: 16px 24px; 
+            padding: 8px 12px; 
             text-align: left; 
             font-weight: 600; 
             color: var(--text-sub); 
-            font-size: 0.75rem; 
+            /* Font Header mengikuti tabel, atau bisa diatur spesifik di sini */
+            font-size: 0.7rem; 
+            
             text-transform: uppercase; 
             letter-spacing: 0.05em;
             border-bottom: 1px solid var(--border);
         }
         td { 
-            padding: 16px 24px; 
+            padding: 8px 12px; 
             border-bottom: 1px solid var(--border);
             color: var(--text-main);
         }
@@ -211,6 +219,7 @@
         /* ALIGNMENTS */
         td.right, th.right { text-align: right; }
         td.center, th.center { text-align: center; }
+        
 
         /* BADGES & COLORS - DENGAN ANIMASI GARIS EMAS */
         .badge { 
