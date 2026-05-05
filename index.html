@@ -3,476 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Report Greysya</title>
-    <!-- Font Inter untuk tampilan modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>payment report greysyaa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♾️</text></svg>">
     <style>
         :root {
-            /* Palette Modern (Tailwind-like) */
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
+            /* Palette: Deep Ocean & Mint */
+            --bg-body: #030712;
+            --bg-surface: #111827;
             
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --primary-soft: #eff6ff;
+            --primary: #2dd4bf; /* Teal/Mint */
+            --primary-soft: rgba(45, 212, 191, 0.1);
+            --primary-glow: rgba(45, 212, 191, 0.4); /* Increased glow for visibility */
             
-            --text-main: #0f172a;
-            --text-sub: #64748b;
-            --text-light: #94a3b8;
+            --accent: #818cf8; /* Indigo */
+            --accent-soft: rgba(129, 140, 248, 0.1);
             
-            --border: #e2e8f0;
-            
+            --danger: #f43f5e;
             --success: #10b981;
-            --success-bg: #ecfdf5;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --warning: #f59e0b;
+            
+            --text-main: #f9fafb;
+            --text-sub: #9ca3af;
+            --text-muted: #6b7280;
+            
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(17, 24, 39, 0.6);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body { 
             background-color: var(--bg-body); 
-            color: var(--text-main); 
+            color: var(--text-main);
             min-height: 100vh; 
-            padding: 32px 20px;
+            padding: 24px;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
-        .container { 
-            width: 100%; 
-            max-width: 1100px; 
-            position: relative; /* For modal positioning context */
+        /* MESH GRADIENT BACKGROUND */
+        .bg-mesh {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(at 0% 0%, hsla(213, 89%, 15%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(263, 89%, 15%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(179, 89%, 10%, 1) 0, transparent 50%), 
+                radial-gradient(at 0% 100%, hsla(339, 89%, 10%, 1) 0, transparent 50%);
         }
 
-        /* HEADER */
-        header { 
-            text-align: center; 
-            margin-bottom: 32px;
-        }
-        header h1 { 
-            font-size: 1.8rem; 
-            font-weight: 700; 
-            color: var(--text-main); 
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-        header p { 
-            color: var(--text-sub); 
-            font-size: 0.95rem; 
-            font-weight: 400;
-        }
+        .container { width: 100%; max-width: 1150px; }
 
-        /* STATUS BAR (Toasts) */
-        .status-bar {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 500;
-            margin-bottom: 24px;
-            transition: all 0.3s ease;
-        }
-        .status-bar.hidden { display: none; }
+        /* HEADER AREA */
+        header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 24px; }
+        .header-content h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; letter-spacing: -0.5px; }
+        .header-content p { font-size: 0.9rem; color: var(--text-muted); }
         
-        .status-bar.loading { background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(59, 130, 246, 0.2); }
-        .status-bar.ok      { background: var(--success-bg); color: #065f46; border: 1px solid #a7f3d0; }
-        .status-bar.err     { background: var(--danger-bg); color: #991b1b; border: 1px solid #fecaca; }
-
-        /* DASHBOARD CARDS (SUMMARY) */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px; 
-            margin-bottom: 24px;
-        }
-        .stat-card {
-            background: var(--bg-card); 
-            border: 1px solid var(--border);
-            border-radius: 16px; 
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-        .stat-label { 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            color: var(--text-sub); 
-            margin-bottom: 8px;
-        }
-        .stat-value { 
-            font-size: 1.75rem; 
-            font-weight: 700; 
-            color: var(--text-main); 
-            line-height: 1.2;
-        }
-        .stat-value.money { color: var(--success); }
-        .stat-value.small { font-size: 1.25rem; }
-
-        /* MAIN CARD (TABLE) */
-        .card {
-            background: var(--bg-card); 
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            overflow: hidden; /* For rounded corners on table */
-        }
-
-        .section-header {
-            display: flex; justify-content: space-between;
-            align-items: center; 
-            padding: 24px 28px;
-            border-bottom: 1px solid var(--border);
-            background: #fafafa;
-        }
-        .section-header h2 { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            color: var(--text-main); 
-        }
-
-        .search-wrap { display: flex; gap: 12px; align-items: center; }
-
-        /* INPUTS & BUTTONS */
+        /* ACTION BAR */
+        .action-bar { display: flex; gap: 12px; align-items: center; }
         input[type="text"] {
-            padding: 10px 16px; 
-            border: 1px solid var(--border);
-            border-radius: 10px; 
-            font-size: 0.9rem; 
-            width: 220px; 
-            background: white;
-            transition: all 0.2s;
-            color: var(--text-main);
+            background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            padding: 10px 16px; border-radius: 10px; font-size: 0.875rem; width: 200px;
+            color: var(--text-main); transition: all 0.2s;
         }
-        input[type="text"]:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
+        input[type="text"]::placeholder { color: var(--text-muted); }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); background: #1f2937; }
 
         button {
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 10px;
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 0.9rem;
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            transition: all 0.2s;
+            padding: 10px 20px; border: 1px solid transparent; border-radius: 10px;
+            cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 8px;
+            background: var(--primary); color: #042f2e; transition: all 0.2s;
         }
-        .btn-refresh { 
-            background: var(--primary); 
-            color: white; 
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-        }
-        .btn-refresh:hover { 
-            background: var(--primary-hover); 
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
-        }
-        .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* TABLE STYLING */
-        .table-wrap { overflow-x: auto; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            
-            /* --- PERUBAHAN FONT --- */
-            font-family: 'Times New Roman', Times, serif; 
-            
-            /* --- PERKECIL FONT --- */
-            font-size: 0.75rem; 
-             
-            white-space: nowrap; 
+        /* STATISTICS LAYOUT (BENTO GRID) */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto;
+            gap: 16px;
+            margin-bottom: 32px;
         }
-        thead { 
-            background: #f8fafc; 
-        }
-        th { 
-            padding: 8px 12px; 
-            text-align: left; 
-            font-weight: 600; 
-            color: var(--text-sub); 
-            /* Font Header mengikuti tabel, atau bisa diatur spesifik di sini */
-            font-size: 0.7rem; 
-            
-            text-transform: uppercase; 
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border);
-        }
-        td { 
-            padding: 8px 12px; 
-            border-bottom: 1px solid var(--border);
-            color: var(--text-main);
-        }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f8fafc; }
 
-        /* ALIGNMENTS */
-        td.right, th.right { text-align: right; }
-        td.center, th.center { text-align: center; }
-        
+        .bento-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px; padding: 24px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
 
-        /* BADGES & COLORS - DENGAN ANIMASI GARIS EMAS */
-        .badge { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            font-size: 0.75rem; 
-            font-weight: 700; 
-            background: var(--primary-soft); 
-            color: var(--primary); 
-            letter-spacing: 0.02em;
-            transition: all 0.2s;
-            
-            /* Setup untuk animasi border */
+        .bento-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .bento-value { font-family: 'Space Grotesk', sans-serif; }
+
+        /* HERO CARD */
+        .bento-item.hero {
+            grid-column: span 2;
+            grid-row: span 2;
+            background: linear-gradient(145deg, rgba(45, 212, 191, 0.05), rgba(17, 24, 39, 0.8));
+            border: 1px solid rgba(45, 212, 191, 0.2);
             position: relative;
-            z-index: 1;
+            overflow: hidden;
+        }
+        .bento-item.hero::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .bento-item.hero .bento-label { font-size: 0.9rem; color: var(--primary); }
+        .bento-item.hero .bento-value { font-size: 3.5rem; line-height: 1; font-weight: 700; color: var(--text-main); margin: 10px 0; }
+
+        /* Small Cards */
+        .small-card .bento-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+        .trend-up { color: var(--success); font-size: 0.8rem; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+
+        /* Fee Card Styling */
+        .fee-card {
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            background: linear-gradient(145deg, rgba(244, 63, 94, 0.05), rgba(17, 24, 39, 0.8));
+        }
+        .fee-card .bento-value { color: var(--danger); }
+
+        /* DATA TABLE AREA */
+        .data-section {
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
             overflow: hidden;
         }
 
-        /* Pseudo-element untuk garis emas bergerak */
-        .badge::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 150%;
-            height: 150%;
-            transform: translate(-50%, -50%);
-            background: conic-gradient(
-                transparent, 
-                transparent, 
-                transparent, 
-                #FFD700 /* Warna Emas */
-            );
-            animation: rotateBorder 3s linear infinite;
-            z-index: -2; /* Di bawah background badge */
-            border-radius: 50%; /* Bentuk lingkaran untuk rotasi */
-        }
-        
-        /* Background utama badge (biru) menutupi tengah gradient, menyisakan pinggiran */
-        .badge::after {
-            content: '';
-            position: absolute;
-            top: 2px; left: 2px; right: 2px; bottom: 2px;
-            background: var(--primary-soft);
-            border-radius: 4px; /* Sedikit lebih kecil dari parent */
-            z-index: -1; /* Di atas gradient ::before */
-        }
-
-        /* Efek Hover sedikit mempercepat rotasi atau mengubah warna */
-        .badge:hover {
-            transform: translateY(-2px);
-            cursor: pointer;
-        }
-
-        @keyframes rotateBorder {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .clickable-id {
-            cursor: pointer;
-            text-decoration: underline;
-            text-decoration-style: dotted;
-            text-underline-offset: 4px;
-        }
-
-        /* ANIMATIONS */
-        .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .dot.ok { background: var(--success); box-shadow: 0 0 0 2px var(--success-bg); }
-        .dot.err { background: var(--danger); box-shadow: 0 0 0 2px var(--danger-bg); }
-        .dot.loading { background: var(--primary); animation: pulse 1.2s infinite; }
-
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-        .spinner {
-            display: inline-block; width: 16px; height: 16px;
-            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
-            border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* SKELETON LOADING */
-        .skeleton-row td { padding: 18px 24px; }
-        .skel {
-            height: 16px; border-radius: 4px;
-            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-            background-size: 200% 100%; animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { to { background-position: -200% 0; } }
-
-        /* EMPTY STATE */
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-sub); }
-        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-        .empty-state p { font-size: 1rem; }
-
-        .sync-info { 
-            font-size: 0.8rem; 
-            color: var(--text-light); 
-            padding: 16px 28px; 
-            background: #fafafa;
-            border-top: 1px solid var(--border);
-            display: flex; justify-content: space-between;
-        }
-
-        footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: var(--text-light); }
-
-        /* MODAL STYLES (NEW) */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
-            z-index: 1000; display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.3s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        
-        .modal-box {
-            background: white; width: 90%; max-width: 500px; max-height: 80vh;
-            border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; transform: scale(0.95); transition: transform 0.3s;
-            border: 1px solid var(--border);
-        }
-        .modal-overlay.active .modal-box { transform: scale(1); }
-
-        .modal-header {
-            padding: 20px; border-bottom: 1px solid var(--border);
+        .data-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .modal-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
-        .modal-close { 
-            background: #f1f5f9; border: none; font-size: 1.2rem; cursor: pointer; 
-            color: var(--text-sub); padding: 6px 10px; border-radius: 8px; 
-            transition: background 0.2s;
-        }
-        .modal-close:hover { background: #e2e8f0; color: var(--danger); }
+        .data-header h3 { font-size: 1rem; font-weight: 600; }
 
-        .modal-body { padding: 0; overflow-y: auto; flex: 1; }
-        .modal-body table { margin-top: 0; }
-        .modal-body thead { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+        /* CUSTOM SCROLLBAR */
+        .table-container { overflow-y: auto; max-height: 500px; }
+        .table-container::-webkit-scrollbar { width: 6px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+
+        /* TABLE STYLING */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; padding: 0 16px 16px 16px; }
         
-        .flag-img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 1px rgba(0,0,0,0.2); vertical-align: middle; margin-right: 10px; }
-        .country-cell { display: flex; align-items: center; }
+        thead th { 
+            text-align: left; padding: 12px 16px; 
+            font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);
+            letter-spacing: 0.05em; font-weight: 600;
+            position: sticky; top: 0; background: var(--bg-body); z-index: 10;
+        }
+        
+        /* FIX: ANIMASI ROW & ID */
+        tbody tr {
+            background: rgba(31, 41, 55, 0.3);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        /* FIX: Changed scale to translateY to prevent cutting off child animations */
+        tbody tr:hover {
+            background: rgba(45, 212, 191, 0.05);
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3), 0 0 10px -5px rgba(45, 212, 191, 0.1);
+            border-color: rgba(45, 212, 191, 0.1);
+        }
+
+        td { padding: 16px; color: var(--text-sub); font-size: 0.9rem; vertical-align: middle; }
+        td:first-child { border-radius: 12px 0 0 12px; }
+        td:last-child { border-radius: 0 12px 12px 0; }
+        
+        .td-main { font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+
+        /* --- FIX: ANIMASI ID (GLOWING BORDER) --- */
+        .td-id { 
+            position: relative;
+            background: rgba(17, 24, 39, 0.8); /* Darker bg for contrast */
+            color: var(--accent); 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-size: 0.8rem; 
+            font-weight: 700;
+            overflow: hidden; /* Penting agar gradient border tidak keluar */
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.2); /* Base border */
+            z-index: 1; /* Ensure it sits above row */
+        }
+
+        /* Gradient pseudo-element for the moving line */
+        .td-id::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 8px;
+            padding: 1px; /* Thickness of the border */
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            
+            /* Animation Setup */
+            background-size: 200% 100%;
+            animation: scanline 2.5s infinite linear;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* Keyframes for the moving line */
+        @keyframes scanline {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .td-money { font-family: 'Space Grotesk', sans-serif; color: var(--success); font-weight: 600; }
+        .td-sub { font-size: 0.85rem; }
+
+        /* FOOTER */
+        .footer-info {
+            display: flex; justify-content: space-between; padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #1f2937; color: var(--text-main); padding: 12px 24px;
+            border-radius: 12px; font-size: 0.9rem; font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid var(--border-subtle);
+            opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.success { border-left: 4px solid var(--success); }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: #111827; border-radius: 16px; width: 90%; max-width: 500px; border: 1px solid var(--border-subtle); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-head { padding: 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 0; max-height: 400px; overflow-y: auto; }
+        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 4px; line-height: 1; }
+        .close-btn:hover { color: var(--danger); }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            .search-wrap { width: 100%; }
-            .search-wrap input { width: 100%; }
-            .summary-grid { grid-template-columns: 1fr; }
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr 1fr; }
+            .bento-item.hero { grid-column: span 2; grid-row: span 1; }
+            .bento-item.hero .bento-value { font-size: 2.5rem; }
+        }
+        @media (max-width: 640px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-item.hero { grid-column: span 1; }
+            .bento-item.kurs-box, .bento-item.fee-card { grid-column: span 1; }
+            header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .action-bar { width: 100%; }
+            input[type="text"] { flex: 1; width: 100%; }
+            button { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
-<div class="container">
 
+<div class="bg-mesh"></div>
+
+<div class="container">
     <header>
-        <h1></h1>
-        <p></p>
+        <div class="header-content">
+            <h1>Financial Report</h1>
+            <p id="reportDate">Rangkuman transaksi terkini</p>
+        </div>
+        <div class="action-bar">
+            <input type="text" id="searchBox" placeholder="Cari User ID..." oninput="filterTable()">
+            <button onclick="loadData()" id="btnRefresh">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>Sync Data</span>
+            </button>
+        </div>
     </header>
 
-    <!-- Status Notification -->
-    <div class="status-bar hidden" id="statusBar">
-        <span class="dot" id="statusDot"></span>
-        <span id="statusMsg"></span>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="summary-grid" id="summaryGrid" style="display:none;">
-        <div class="stat-card">
-            <div class="stat-label">Total Pendapatan</div>
-            <div class="stat-value money" id="sumNet">—</div>
+    <!-- BENTO GRID STATS -->
+    <div class="bento-grid" id="statsGrid">
+        <!-- HERO: Net Income -->
+        <div class="bento-item hero">
+            <div class="bento-label">Total Pendapatan</div>
+            <div class="bento-value" id="sumNet">Rp 0</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-label">Total Leads</div>
-            <div class="stat-value" id="sumLeads">—</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Total UserID</div>
-            <div class="stat-value" id="sumLinks">—</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Rate Kurs (USD)</div>
-            <div class="stat-value small" id="sumRate">—</div>
-        </div>
-    </div>
-
-    <!-- Main Table Card -->
-    <div class="card" id="tableCard" style="display:none;">
-        <div class="section-header">
-            <h2>Detail Transaksi</h2>
-            <div class="search-wrap">
-                <input type="text" id="searchBox" placeholder="Cari Smartlink ID..." oninput="filterTable()">
-                <button class="btn-refresh" id="btnRefresh" onclick="loadData()">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    Refresh
-                </button>
+        
+        <!-- Small Card: Total Leads -->
+        <div class="bento-item small-card">
+            <div class="bento-label">Total Leads</div>
+            <div class="bento-value" id="sumLeads">0</div>
+            <div class="trend-up">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                Conversions
             </div>
         </div>
         
-        <div class="table-wrap">
+        <!-- Small Card: Active Users -->
+        <div class="bento-item small-card">
+            <div class="bento-label">Active Users</div>
+            <div class="bento-value" id="sumLinks">0</div>
+            <div class="trend-up" style="color: var(--accent);">
+                Unique IDs
+            </div>
+        </div>
+
+        <!-- Box: Kurs USD -->
+        <div class="bento-item small-card kurs-box">
+            <div class="bento-label">Kurs USD → IDR</div>
+            <div class="bento-value" style="display:flex; align-items:center; gap:10px;">
+                <span id="sumRate">—</span>
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">Rate</span>
+            </div>
+        </div>
+
+        <!-- Box: Admin Fee (Updated to Percentage) -->
+        <div class="bento-item small-card fee-card">
+            <div class="bento-label">Admin Fee</div>
+            <div class="bento-value" id="sumFee">0%</div>
+            <div class="trend-up" style="color: var(--danger); opacity: 0.8;">
+            </div>
+        </div>
+    </div>
+
+    <!-- DATA TABLE -->
+    <div class="data-section">
+        <div class="data-header">
+            <h3>Detail Transaksi</h3>
+            <span style="color: var(--text-muted); font-size: 0.85rem;" id="rowCount">0 Items</span>
+        </div>
+        <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th style="width:50px;">No</th>
-                        <th>UserID ID</th>
-                        <th class="center">Leads</th>
-                        <th class="right">Payout (USD)</th>
-                        <th class="right">Gross IDR</th>
-                        <th class="right">Admin Fee</th>
-                        <th class="right">Total Akhir</th>
+                        <th style="width: 60px;">No.</th>
+                        <th>User ID</th>
+                        <th style="text-align:center;">Leads</th>
+                        <th style="text-align:right;">Payout</th>
+                        <th style="text-align:right;">Net Income</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="tableBody">
+                    <!-- Rows injected here -->
+                </tbody>
             </table>
         </div>
-
-        <div class="sync-info" id="syncInfo"></div>
-    </div>
-
-    <footer>Powered by Report Greysya</footer>
-
-    <!-- MODAL DETAIL NEGARA -->
-    <div id="countryModal" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <h3>Detail LEADS: <span id="modalSmartlinkId" style="color:var(--primary);"></span></h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="table-container" style="border:none;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Negara</th>
-                                <th style="text-align:center;">Leads</th>
-                                <th style="text-align:right;">USD$</th>
-                            </tr>
-                        </thead>
-                        <tbody id="modalTableBody">
-                            <!-- Rows inserted by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="footer-info">
+            <span>report greysyaa</span>
+            <span id="syncTime">Last sync: —</span>
         </div>
     </div>
+</div>
 
+<!-- TOAST -->
+<div class="toast" id="toast">Message</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-head">
+            <h3 style="color:var(--text-main);">Detail: <span id="modalTitle" style="color:var(--primary)"></span></h3>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <table id="modalTable" style="padding: 10px;">
+                <thead>
+                    <tr>
+                        <th>Negara</th>
+                        <th style="text-align:center;">Leads</th>
+                        <th style="text-align:right;">Revenue</th>
+                    </tr>
+                </thead>
+                <tbody id="modalBody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
-    // ── KONFIGURASI NEGARA ────────────────────────────────────────────────────────
     const COUNTRY_MAP = {
         "AF": "Afghanistan", "AX": "Åland Islands", "AL": "Albania", "DZ": "Algeria", "AS": "American Samoa",
         "AD": "Andorra", "AO": "Angola", "AI": "Anguilla", "AQ": "Antarctica", "AG": "Antigua and Barbuda",
@@ -525,7 +441,6 @@
         "WF": "Wallis and Futuna", "EH": "Western Sahara", "YE": "Yemen", "ZM": "Zambia", "ZW": "Zimbabwe"
     };
 
-    // --- KONFIGURASI & LOGIC ---
     const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
     const BIN_ID      = '69f9ceef856a682189ab3137';
     const ACCESS_KEY  = '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
@@ -539,12 +454,18 @@
 
     window.addEventListener('load', () => loadData());
 
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `toast show ${type}`;
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
     async function loadData() {
-        setStatus('loading', 'Memuat data terbaru...');
         const btn = document.getElementById('btnRefresh');
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Memuat...';
-        showSkeleton();
+        btn.innerHTML = '<span style="animation: spin 1s linear infinite; display:inline-block;">↻</span> Syncing...';
+        showToast('Menghubungkan ke server...', 'success');
 
         try {
             const res = await fetch(`${JSONBIN_BASE}/b/${BIN_ID}/latest`, {
@@ -553,48 +474,56 @@
 
             if (!res.ok) {
                 const errBody = await res.json().catch(() => ({}));
-                if (res.status === 401 || res.status === 403) throw new Error('Access Key tidak valid atau tidak punya izin baca.');
-                if (res.status === 404) throw new Error('Bin tidak ditemukan — pastikan admin sudah menyimpan data.');
-                throw new Error(errBody.message || `HTTP ${res.status}`);
+                if (res.status === 401 || res.status === 403) throw new Error('Akses ditolak (403).');
+                if (res.status === 404) throw new Error('Data source tidak ditemukan (404).');
+                throw new Error(errBody.message || `HTTP Error ${res.status}`);
             }
 
             const result = await res.json();
             const data = (result && result.record !== undefined) ? result.record : result;
 
             if (!data || !Array.isArray(data.rows) || data.rows.length === 0) {
-                setStatus('err', 'Data masih kosong — admin belum menyimpan data ke bin ini.');
-                hideTables();
-                return;
+                throw new Error('Database kosong atau format salah.');
             }
 
             allRows = [...data.rows].sort((a, b) => b.finalNetIDR - a.finalNetIDR);
 
-            let totalNet = 0, totalLeads = 0;
-            allRows.forEach(r => { totalNet += r.finalNetIDR; totalLeads += r.count; });
+            let totalNet = 0, totalLeads = 0, totalAdminPercent = 0;
+            
+            allRows.forEach(r => { 
+                totalNet += r.finalNetIDR; 
+                totalLeads += r.count;
+                // Tambahkan pengecekan untuk memastikan adminPercent ada
+                if (r.adminPercent) {
+                    totalAdminPercent += r.adminPercent;
+                }
+            });
 
-            document.getElementById('sumNet').textContent   = fmt.idr(totalNet);
+            // Hitung rata-rata persentase fee
+            const avgFeePercent = totalAdminPercent / allRows.length;
+
+            // Update UI
+            document.getElementById('sumNet').textContent = fmt.idr(totalNet);
             document.getElementById('sumLeads').textContent = totalLeads.toLocaleString('id-ID');
             document.getElementById('sumLinks').textContent = allRows.length;
-            document.getElementById('sumRate').textContent  = data.rate ? `Rp ${fmt.rate(data.rate)}` : '—';
-
-            document.getElementById('summaryGrid').style.display = 'grid';
-            document.getElementById('tableCard').style.display   = 'block';
+            
+            // Tampilkan Persentase Fee (contoh: 4.0%)
+            document.getElementById('sumFee').textContent = avgFeePercent.toFixed(1) + '%';
+            
+            if(data.rate) document.getElementById('sumRate').textContent = `Rp ${fmt.rate(data.rate)}`;
+            
+            document.getElementById('rowCount').textContent = `${allRows.length} Items`;
+            document.getElementById('syncTime').textContent = `Last sync: ${new Date().toLocaleTimeString('id-ID')}`;
 
             renderTable(allRows);
-
-            const savedAt = data.savedAt ? new Date(data.savedAt).toLocaleString('id-ID') : '—';
-            document.getElementById('syncInfo').innerHTML = `
-                <span>Terakhir update Admin: <strong>${savedAt}</strong></span>
-                <span>Dimuat: <strong>${new Date().toLocaleString('id-ID')}</strong></span>
-            `;
-            setStatus('ok', `Data berhasil dimuat — ${allRows.length} CLICKID`);
+            showToast('Data berhasil dimuat!', 'success');
 
         } catch (err) {
-            setStatus('err', 'Gagal memuat data: ' + err.message);
-            hideTables();
+            showToast('Error: ' + err.message, 'error');
+            console.error(err);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Refresh';
+            btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> <span>Sync Data</span>';
         }
     }
 
@@ -602,20 +531,23 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
         if (rows.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🔍</div><p>Tidak ada data yang cocok dengan pencarian Anda.</p></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">Tidak ada data.</td></tr>`;
             return;
         }
         rows.forEach((item, i) => {
             const tr = document.createElement('tr');
-            // PERUBAHAN DI SINI: ID sekarang clickable
+            tr.onclick = () => openCountryModal(item.id);
+            
             tr.innerHTML = `
-                <td style="color:var(--text-sub);font-size:0.85rem;">${i + 1}</td>
-                <td><span class="badge clickable-id" onclick="openCountryModal('${esc(String(item.id))}')">${esc(String(item.id))}</span></td>
-                <td class="center" style="font-weight:600; color:var(--text-main);">${item.count.toLocaleString('id-ID')}</td>
-                <td class="right" style="color:var(--text-sub);font-size:0.85rem;">${fmt.usd(item.totalPayoutUSD)}</td>
-                <td class="right" style="font-family:'Courier New', monospace; font-weight:500;">${fmt.idr(item.grossIDR)}</td>
-                <td class="right" style="color:var(--danger);font-size:0.85rem;">${item.adminPercent}%</td>
-                <td class="right" style="font-weight:700;color:var(--success);font-size:1rem;">${fmt.idr(item.finalNetIDR)}</td>
+                <td style="color: var(--text-muted);">${i + 1}</td>
+                <td>
+                    <div class="td-main">
+                        <span class="td-id">${esc(String(item.id))}</span>
+                    </div>
+                </td>
+                <td style="text-align:center; font-weight:600;">${item.count.toLocaleString('id-ID')}</td>
+                <td style="text-align:right;" class="td-sub">${fmt.usd(item.totalPayoutUSD)}</td>
+                <td style="text-align:right;" class="td-money">${fmt.idr(item.finalNetIDR)}</td>
             `;
             tbody.appendChild(tr);
         });
@@ -626,92 +558,45 @@
         renderTable(allRows.filter(r => String(r.id).toLowerCase().includes(q)));
     }
 
-    function showSkeleton() {
-        document.getElementById('summaryGrid').style.display = 'grid';
-        document.getElementById('tableCard').style.display = 'block';
-        ['sumNet','sumLeads','sumLinks','sumRate'].forEach(id => document.getElementById(id).textContent = '—');
-        let rows = '';
-        for (let i = 0; i < 6; i++) {
-            rows += `<tr class="skeleton-row">
-                <td><div class="skel" style="width:25px;"></div></td>
-                <td><div class="skel" style="width:80px;"></div></td>
-                <td><div class="skel" style="width:30px;margin:0 auto;"></div></td>
-                <td><div class="skel" style="width:70px;margin-left:auto;"></div></td>
-                <td><div class="skel" style="width:100px;margin-left:auto;"></div></td>
-                <td><div class="skel" style="width:40px;margin-left:auto;"></div></td>
-                <td><div class="skel" style="width:100px;margin-left:auto;"></div></td>
-            </tr>`;
-        }
-        document.getElementById('tableBody').innerHTML = rows;
-    }
-
-    function hideTables() {
-        document.getElementById('summaryGrid').style.display = 'none';
-        document.getElementById('tableCard').style.display = 'none';
-    }
-
-    function setStatus(type, msg) {
-        const bar = document.getElementById('statusBar');
-        bar.className = `status-bar ${type}`;
-        document.getElementById('statusDot').className = `dot ${type}`;
-        document.getElementById('statusMsg').textContent = msg;
-    }
-
     function esc(str) {
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;');
     }
 
-    // ── LOGIC MODAL NEGARA (BARU) ────────────────────────────────────────────────
     function openCountryModal(id) {
         const item = allRows.find(r => r.id === id);
-        if (!item) return;
-
-        // Cek apakah data negara tersedia (opsional, jika data lama tidak punya detail negara)
-        if (!item.countries || Object.keys(item.countries).length === 0) {
-            alert("Data detail negara tidak tersedia untuk user ID ini.");
+        if (!item || !item.countries || Object.keys(item.countries).length === 0) {
+            showToast("Detail negara tidak tersedia.", "error");
             return;
         }
 
-        document.getElementById('modalSmartlinkId').textContent = id;
-        const tbody = document.getElementById('modalTableBody');
+        document.getElementById('modalTitle').textContent = id;
+        const tbody = document.getElementById('modalBody');
         tbody.innerHTML = '';
 
-        // Urutkan negara berdasarkan count tertinggi
         const sortedCountries = Object.entries(item.countries).sort((a,b) => b[1].count - a[1].count);
 
         sortedCountries.forEach(([code, data]) => {
             const countryName = COUNTRY_MAP[code] || code;
-            const percentage = ((data.count / item.count) * 100).toFixed(1);
-            
-            // URL Flag Uppercase
             const flagUrl = `https://jennyhebya.github.io/country_flags/${code.toUpperCase()}.svg`;
-
+            
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>
-                    <div class="country-cell">
-                        <img src="${flagUrl}" class="flag-img" alt="${code}" onerror="this.style.display='none'">
-                        <span>${countryName} <small style="color:var(--text-sub)">(${code})</small></span>
-                    </div>
+                <td style="display:flex; align-items:center; gap:10px; padding:12px 0;">
+                    <img src="${flagUrl}" width="20" height="14" style="border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,0.2);" onerror="this.style.display='none'">
+                    <span>${countryName}</span>
                 </td>
-                <td style="text-align:center;">${data.count}</td>
-                <td style="text-align:right;">
-                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:10px;">
-                        <span style="font-size:0.85rem; color:var(--text-sub);">${percentage}%</span>
-                        <span style="font-weight:bold; color:var(--primary);">${fmt.usd(data.totalUSD)}</span>
-                    </div>
-                </td>
+                <td style="text-align:center; font-weight:600;">${data.count}</td>
+                <td style="text-align:right; color:var(--primary); font-weight:600;">${fmt.usd(data.totalUSD)}</td>
             `;
             tbody.appendChild(tr);
         });
 
-        document.getElementById('countryModal').classList.add('active');
+        document.getElementById('modal').classList.add('active');
     }
 
     function closeModal(e) {
-        // Jika dipanggil dengan event (klik background), cek target
         if (e && e.target !== e.currentTarget) return;
-        document.getElementById('countryModal').classList.remove('active');
+        document.getElementById('modal').classList.remove('active');
     }
 </script>
 </body>
