@@ -14,7 +14,7 @@
             
             --primary: #2dd4bf; /* Teal/Mint */
             --primary-soft: rgba(45, 212, 191, 0.1);
-            --primary-glow: rgba(45, 212, 191, 0.4); /* Increased glow for visibility */
+            --primary-glow: rgba(45, 212, 191, 0.4);
             
             --accent: #818cf8; /* Indigo */
             --accent-soft: rgba(129, 140, 248, 0.1);
@@ -61,13 +61,18 @@
         .header-content p { font-size: 0.9rem; color: var(--text-muted); }
         
         /* ACTION BAR */
-        .action-bar { display: flex; gap: 12px; align-items: center; }
+        .action-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        
         input[type="text"] {
             background: var(--bg-surface); border: 1px solid var(--border-subtle);
-            padding: 10px 16px; border-radius: 10px; font-size: 0.875rem; width: 200px;
-            color: var(--text-main); transition: all 0.2s;
+            padding: 10px 16px; border-radius: 10px; font-size: 0.875rem; 
+            color: var(--text-main); transition: all 0.2s; min-width: 150px;
         }
-        input[type="text"]::placeholder { color: var(--text-muted); }
+        
+        #searchBox { width: 200px; } 
+        #binInput { width: 240px; border-color: rgba(45, 212, 191, 0.3); color: var(--primary); font-family: monospace; letter-spacing: 0.5px; } 
+        
+        input[type="text"]::placeholder { color: var(--text-muted); opacity: 0.6; }
         input[type="text"]:focus { outline: none; border-color: var(--primary); background: #1f2937; }
 
         button {
@@ -157,7 +162,7 @@
             position: sticky; top: 0; background: var(--bg-body); z-index: 10;
         }
         
-        /* FIX: ANIMASI ROW & ID */
+        /* ROW ANIMATION */
         tbody tr {
             background: rgba(31, 41, 55, 0.3);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -165,7 +170,6 @@
             border: 1px solid transparent;
         }
         
-        /* FIX: Changed scale to translateY to prevent cutting off child animations */
         tbody tr:hover {
             background: rgba(45, 212, 191, 0.05);
             transform: translateY(-2px); 
@@ -179,42 +183,38 @@
         
         .td-main { font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 
-        /* --- FIX: ANIMASI ID (GLOWING BORDER) --- */
+        /* ANIMASI ID (GLOWING BORDER) */
         .td-id { 
             position: relative;
-            background: rgba(17, 24, 39, 0.8); /* Darker bg for contrast */
+            background: rgba(17, 24, 39, 0.8); 
             color: var(--accent); 
             padding: 6px 12px; 
             border-radius: 8px; 
             font-size: 0.8rem; 
             font-weight: 700;
-            overflow: hidden; /* Penting agar gradient border tidak keluar */
-            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.2); /* Base border */
-            z-index: 1; /* Ensure it sits above row */
+            overflow: hidden; 
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.2); 
+            z-index: 1; 
         }
 
-        /* Gradient pseudo-element for the moving line */
         .td-id::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             border-radius: 8px;
-            padding: 1px; /* Thickness of the border */
+            padding: 1px; 
             background: linear-gradient(90deg, transparent, var(--primary), transparent);
             -webkit-mask: 
                 linear-gradient(#fff 0 0) content-box, 
                 linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            
-            /* Animation Setup */
             background-size: 200% 100%;
             animation: scanline 2.5s infinite linear;
             opacity: 0.8;
             pointer-events: none;
         }
 
-        /* Keyframes for the moving line */
         @keyframes scanline {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
@@ -259,14 +259,15 @@
             .bento-item.hero { grid-column: span 2; grid-row: span 1; }
             .bento-item.hero .bento-value { font-size: 2.5rem; }
         }
+        @media (max-width: 768px) {
+            .action-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+            #searchBox, #binInput, button { width: 100%; }
+        }
         @media (max-width: 640px) {
             .bento-grid { grid-template-columns: 1fr; }
             .bento-item.hero { grid-column: span 1; }
             .bento-item.kurs-box, .bento-item.fee-card { grid-column: span 1; }
             header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            .action-bar { width: 100%; }
-            input[type="text"] { flex: 1; width: 100%; }
-            button { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -278,9 +279,11 @@
     <header>
         <div class="header-content">
             <h1>Financial Report</h1>
-            <p id="reportDate">Rangkuman transaksi terkini</p>
+            <p id="reportDate">Rangkuman transaksi</p>
         </div>
         <div class="action-bar">
+            <input type="text" id="binInput" placeholder="Bin ID" title="Masukkan ID Bin JSONBin.io di sini">
+            
             <input type="text" id="searchBox" placeholder="Cari User ID..." oninput="filterTable()">
             <button onclick="loadData()" id="btnRefresh">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -289,15 +292,13 @@
         </div>
     </header>
 
-    <!-- BENTO GRID STATS -->
+    <!-- BENTO GRID STATS (DEFAULT 0) -->
     <div class="bento-grid" id="statsGrid">
-        <!-- HERO: Net Income -->
         <div class="bento-item hero">
             <div class="bento-label">Total Pendapatan</div>
             <div class="bento-value" id="sumNet">Rp 0</div>
         </div>
         
-        <!-- Small Card: Total Leads -->
         <div class="bento-item small-card">
             <div class="bento-label">Total Leads</div>
             <div class="bento-value" id="sumLeads">0</div>
@@ -307,7 +308,6 @@
             </div>
         </div>
         
-        <!-- Small Card: Active Users -->
         <div class="bento-item small-card">
             <div class="bento-label">Active Users</div>
             <div class="bento-value" id="sumLinks">0</div>
@@ -316,7 +316,6 @@
             </div>
         </div>
 
-        <!-- Box: Kurs USD -->
         <div class="bento-item small-card kurs-box">
             <div class="bento-label">Kurs USD → IDR</div>
             <div class="bento-value" style="display:flex; align-items:center; gap:10px;">
@@ -325,7 +324,6 @@
             </div>
         </div>
 
-        <!-- Box: Admin Fee (Updated to Percentage) -->
         <div class="bento-item small-card fee-card">
             <div class="bento-label">Admin Fee</div>
             <div class="bento-value" id="sumFee">0%</div>
@@ -338,7 +336,7 @@
     <div class="data-section">
         <div class="data-header">
             <h3>Detail Transaksi</h3>
-            <span style="color: var(--text-muted); font-size: 0.85rem;" id="rowCount">0 Items</span>
+            <span style="color: var(--text-muted); font-size: 0.85rem;" id="rowCount">Menunggu Data...</span>
         </div>
         <div class="table-container">
             <table>
@@ -352,13 +350,19 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <!-- Rows injected here -->
+                    <!-- Empty State Message -->
+                    <tr>
+                        <td colspan="5" style="text-align:center; opacity:0.5; padding:40px;">
+                            <div style="margin-bottom:10px; font-size:2rem;">📭</div>
+                            Silakan masukkan Bin ID dan klik <b>Sync Data</b> untuk memuat laporan.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         <div class="footer-info">
             <span>report greysyaa</span>
-            <span id="syncTime">Last sync: —</span>
+            <span id="syncTime">Belum sinkron</span>
         </div>
     </div>
 </div>
@@ -442,17 +446,15 @@
     };
 
     const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
-    const BIN_ID      = '69f9ceef856a682189ab3137';
     const ACCESS_KEY  = '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
-    let allRows = [];
+    
+    let allRows = []; 
 
     const fmt = {
         usd:  v => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(v),
         idr:  v => new Intl.NumberFormat('id-ID', {style:'currency', currency:'IDR', maximumFractionDigits:0}).format(v),
         rate: v => new Intl.NumberFormat('id-ID').format(v)
     };
-
-    window.addEventListener('load', () => loadData());
 
     function showToast(msg, type = 'success') {
         const t = document.getElementById('toast');
@@ -462,20 +464,30 @@
     }
 
     async function loadData() {
+        const binInput = document.getElementById('binInput');
         const btn = document.getElementById('btnRefresh');
+        const binId = binInput.value.trim();
+
+        // Validasi Input Kosong
+        if (!binId) {
+            showToast('Masukkan Bin ID terlebih dahulu!', 'error');
+            binInput.focus();
+            return;
+        }
+
         btn.disabled = true;
         btn.innerHTML = '<span style="animation: spin 1s linear infinite; display:inline-block;">↻</span> Syncing...';
-        showToast('Menghubungkan ke server...', 'success');
+        showToast(`Menghubungkan ke Bin: ${binId}...`, 'success');
 
         try {
-            const res = await fetch(`${JSONBIN_BASE}/b/${BIN_ID}/latest`, {
+            const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
                 headers: { 'X-Access-Key': ACCESS_KEY }
             });
 
             if (!res.ok) {
                 const errBody = await res.json().catch(() => ({}));
-                if (res.status === 401 || res.status === 403) throw new Error('Akses ditolak (403).');
-                if (res.status === 404) throw new Error('Data source tidak ditemukan (404).');
+                if (res.status === 401 || res.status === 403) throw new Error('Akses ditolak (Cek Access Key).');
+                if (res.status === 404) throw new Error('Bin ID tidak ditemukan (404).');
                 throw new Error(errBody.message || `HTTP Error ${res.status}`);
             }
 
@@ -493,21 +505,17 @@
             allRows.forEach(r => { 
                 totalNet += r.finalNetIDR; 
                 totalLeads += r.count;
-                // Tambahkan pengecekan untuk memastikan adminPercent ada
                 if (r.adminPercent) {
                     totalAdminPercent += r.adminPercent;
                 }
             });
 
-            // Hitung rata-rata persentase fee
-            const avgFeePercent = totalAdminPercent / allRows.length;
+            const avgFeePercent = allRows.length > 0 ? (totalAdminPercent / allRows.length) : 0;
 
-            // Update UI
+            // Update UI Stats
             document.getElementById('sumNet').textContent = fmt.idr(totalNet);
             document.getElementById('sumLeads').textContent = totalLeads.toLocaleString('id-ID');
             document.getElementById('sumLinks').textContent = allRows.length;
-            
-            // Tampilkan Persentase Fee (contoh: 4.0%)
             document.getElementById('sumFee').textContent = avgFeePercent.toFixed(1) + '%';
             
             if(data.rate) document.getElementById('sumRate').textContent = `Rp ${fmt.rate(data.rate)}`;
@@ -531,7 +539,8 @@
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
         if (rows.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">Tidak ada data.</td></tr>`;
+            // Jika array benar-benar kosong setelah fetch
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">Tidak ada data ditemukan.</td></tr>`;
             return;
         }
         rows.forEach((item, i) => {
@@ -555,6 +564,11 @@
 
     function filterTable() {
         const q = document.getElementById('searchBox').value.toLowerCase();
+        // Jika belum ada data, jangan filter, biarkan tampil pesan awal atau tampilkan "No Data"
+        if (allRows.length === 0) {
+            // Opsional: Bisa biarkan kosong
+            return; 
+        }
         renderTable(allRows.filter(r => String(r.id).toLowerCase().includes(q)));
     }
 
