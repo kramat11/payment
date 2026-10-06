@@ -1,103 +1,222 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>payment report greysyaa</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♾️</text></svg>">
+
     <style>
         :root {
-            /* Palette: Clean Slate & Mint (Light Mode) */
-            --bg-body: #f8fafc; /* Slate 50 (Background Utama) */
-            --bg-surface: #ffffff; /* Putih (Surface/Card) */
-            
-            --primary: #0d9488; /* Teal 600 (Warna Utama Lebih Gelap agar kontras) */
+            --bg-body: #f8fafc;
+            --bg-surface: #ffffff;
+
+            --primary: #0d9488;
             --primary-soft: rgba(13, 148, 136, 0.1);
             --primary-glow: rgba(13, 148, 136, 0.25);
-            
-            --accent: #4f46e5; /* Indigo 600 */
+
+            --accent: #4f46e5;
             --accent-soft: rgba(79, 70, 229, 0.1);
-            
+
             --danger: #e11d48;
             --success: #059669;
-            
-            --text-main: #0f172a; /* Slate 900 (Teks Utama Hitam Pekat) */
-            --text-sub: #475569; /* Slate 600 (Teks Sekunder Abu) */
-            --text-muted: #94a3b8; /* Slate 400 */
-            
-            --border-subtle: rgba(0, 0, 0, 0.08); /* Border Hitam Transparan */
+
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --text-muted: #94a3b8;
+
+            --border-subtle: rgba(0, 0, 0, 0.08);
             --card-bg: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-        body { 
-            background-color: var(--bg-body); 
+        body {
+            background-color: var(--bg-body);
             color: var(--text-main);
-            min-height: 100vh; 
+            min-height: 100vh;
             padding: 24px;
             display: flex;
             justify-content: center;
             overflow-x: hidden;
         }
 
-        /* MESH GRADIENT BACKGROUND (Light Version) */
         .bg-mesh {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, hsla(210, 100%, 96%, 1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(260, 100%, 96%, 1) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, hsla(180, 100%, 96%, 1) 0, transparent 50%), 
+
+            background:
+                radial-gradient(at 0% 0%, hsla(210, 100%, 96%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(260, 100%, 96%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(180, 100%, 96%, 1) 0, transparent 50%),
                 radial-gradient(at 0% 100%, hsla(340, 100%, 96%, 1) 0, transparent 50%);
-            opacity: 0.6; /* Sedikit transparan */
+
+            opacity: 0.6;
         }
 
-        .container { width: 100%; max-width: 1200px; }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
 
-        /* HEADER AREA */
-        header { display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 24px; }
-        .header-top { display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-content h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; letter-spacing: -0.5px; }
-        .header-content p { font-size: 0.9rem; color: var(--text-muted); }
-        
-        /* ACTION BAR */
-        .action-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 24px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         input[type="text"] {
-            background: #f1f5f9; /* Slate 100 */
+            background: #f1f5f9;
             border: 1px solid var(--border-subtle);
-            padding: 10px 16px; border-radius: 10px; font-size: 0.875rem; 
-            color: var(--text-main); transition: all 0.2s; min-width: 150px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            transition: all 0.2s;
+            min-width: 150px;
         }
-        
-        #searchBox { width: 200px; } 
-        #binInput { width: 240px; border-color: rgba(13, 148, 136, 0.3); color: var(--primary); font-family: monospace; letter-spacing: 0.5px; } 
-        
-        input[type="text"]::placeholder { color: var(--text-muted); opacity: 0.8; }
-        input[type="text"]:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px var(--primary-soft); }
+
+        #searchBox {
+            width: 200px;
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
 
         button {
-            padding: 10px 20px; border: 1px solid transparent; border-radius: 10px;
-            cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 8px;
-            background: var(--primary); color: #ffffff; /* Teks tombol putih agar kontras dengan Teal gelap */
+            padding: 10px 20px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: #ffffff;
             transition: all 0.2s;
         }
-        button:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 4px 12px var(--primary-glow); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* TABS NAVIGATION */
-        .nav-tabs { display: flex; gap: 10px; margin-top: 10px; background: #f1f5f9; padding: 5px; border-radius: 12px; width: fit-content; border: 1px solid var(--border-subtle); }
-        .tab-btn { padding: 10px 24px; border: none; background: transparent; color: var(--text-sub); font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; font-size: 0.9rem; }
-        .tab-btn:hover { background: rgba(255,255,255,0.5); color: var(--text-main); }
-        .tab-btn.active { background: var(--bg-surface); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        button:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
 
-        /* STATISTICS LAYOUT (BENTO GRID) */
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 12px;
+            width: fit-content;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.5);
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-surface);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -110,43 +229,83 @@
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-subtle);
-            border-radius: 20px; padding: 24px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Soft shadow for light mode */
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .bento-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-        .bento-value { font-family: 'Space Grotesk', sans-serif; }
+        .bento-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
 
-        /* HERO CARD */
+        .bento-value {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
         .bento-item.hero {
             grid-column: span 2;
             grid-row: span 2;
-            background: linear-gradient(145deg, #f0fdfa, #ffffff); /* Light Teal Tint */
+            background: linear-gradient(145deg, #f0fdfa, #ffffff);
             border: 1px solid rgba(13, 148, 136, 0.2);
             position: relative;
             overflow: hidden;
         }
+
         .bento-item.hero::after {
-            content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px;
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
             background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
             pointer-events: none;
         }
-        .bento-item.hero .bento-label { color: var(--primary); }
-        .bento-item.hero .bento-value { font-size: 3.5rem; line-height: 1; font-weight: 700; color: var(--text-main); margin: 10px 0; }
 
-        /* Small Cards */
-        .small-card .bento-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
-        .trend-up { color: var(--success); font-size: 0.8rem; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+        .bento-item.hero .bento-label {
+            color: var(--primary);
+        }
 
-        /* Fee Card Styling */
+        .bento-item.hero .bento-value {
+            font-size: 3.5rem;
+            line-height: 1;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 10px 0;
+        }
+
+        .small-card .bento-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .trend-up {
+            color: var(--success);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
         .fee-card {
             border: 1px solid rgba(225, 29, 72, 0.2);
             background: linear-gradient(145deg, #fff1f2, #ffffff);
         }
-        .fee-card .bento-value { color: var(--danger); }
 
-        /* DATA TABLE AREA */
+        .fee-card .bento-value {
+            color: var(--danger);
+        }
+
         .data-section {
             background: var(--card-bg);
             border: 1px solid var(--border-subtle);
@@ -158,81 +317,170 @@
         .data-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border-subtle);
-            display: flex; justify-content: space-between; align-items: center;
-            background: #f8fafc; /* Light grey header bg */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
         }
-        .data-header h3 { font-size: 1rem; font-weight: 600; color: var(--text-main); }
 
-        /* SUB TABS FOR SEGMENTS */
-        .segment-sub-nav { display: flex; gap: 10px; margin-bottom: 0; padding: 20px 24px 0 24px; overflow-x: auto; background: #f8fafc; }
-        .sub-nav-btn { flex: 1; padding: 12px; border: 1px solid var(--border-subtle); background: transparent; border-radius: 12px 12px 0 0; cursor: pointer; font-weight: 600; color: var(--text-sub); text-align: center; transition: all 0.2s; min-width: 100px; border-bottom: none; }
-        .sub-nav-btn:hover { background: rgba(255,255,255,0.5); color: var(--text-main); }
-        .sub-nav-btn.active { background: #ffffff; color: var(--primary); border-color: var(--primary); border-bottom: 1px solid var(--bg-surface); z-index: 2; }
-
-        /* CUSTOM SCROLLBAR */
-        .table-container { overflow-y: auto; max-height: 500px; }
-        .table-container::-webkit-scrollbar { width: 6px; }
-        .table-container::-webkit-scrollbar-track { background: #f1f5f9; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-
-        /* TABLE STYLING */
-        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; padding: 0 16px 16px 16px; }
-        
-        thead th { 
-            text-align: left; padding: 12px 16px; 
-            font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);
-            letter-spacing: 0.05em; font-weight: 600;
-            position: sticky; top: 0; background: #f8fafc; z-index: 10; /* Match header bg */
+        .data-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
         }
-        
-        /* ROW ANIMATION */
+
+        .segment-sub-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0;
+            padding: 20px 24px 0 24px;
+            overflow-x: auto;
+            background: #f8fafc;
+        }
+
+        .sub-nav-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-sub);
+            text-align: center;
+            transition: all 0.2s;
+            min-width: 100px;
+            border-bottom: none;
+        }
+
+        .sub-nav-btn:hover {
+            background: rgba(255,255,255,0.5);
+            color: var(--text-main);
+        }
+
+        .sub-nav-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            border-color: var(--primary);
+            border-bottom: 1px solid var(--bg-surface);
+            z-index: 2;
+        }
+
+        .table-container {
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            padding: 0 16px 16px 16px;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            z-index: 10;
+        }
+
         tbody tr {
-            background: #ffffff; /* Putih bersih */
+            background: #ffffff;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: 1px solid var(--border-subtle);
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
-        
+
         tbody tr:hover {
-            background: #f0fdfa; /* Teal sangat muda saat hover */
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 0 10px -5px rgba(13, 148, 136, 0.1);
+            background: #f0fdfa;
+            transform: translateY(-2px);
+            box-shadow:
+                0 10px 15px -3px rgba(0, 0, 0, 0.05),
+                0 0 10px -5px rgba(13, 148, 136, 0.1);
             border-color: var(--primary);
         }
 
-        td { padding: 16px; color: var(--text-sub); font-size: 0.9rem; vertical-align: middle; }
-        td:first-child { border-radius: 12px 0 0 12px; }
-        td:last-child { border-radius: 0 12px 12px 0; }
-        
-        .td-main { font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        td {
+            padding: 16px;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
 
-        /* ANIMASI ID (GLOWING BORDER) */
-        .td-id { 
+        td:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .td-main {
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .td-id {
             position: relative;
-            background: #f1f5f9; /* Slate 100 */
-            color: var(--accent); 
-            padding: 6px 12px; 
-            border-radius: 8px; 
-            font-size: 0.8rem; 
+            background: #f1f5f9;
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 700;
-            overflow: hidden; 
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); 
-            z-index: 1; 
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            z-index: 1;
         }
 
         .td-id::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             border-radius: 8px;
-            padding: 1px; 
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
+            padding: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--primary),
+                transparent
+            );
+
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
                 linear-gradient(#fff 0 0);
+
             -webkit-mask-composite: xor;
             mask-composite: exclude;
+
             background-size: 200% 100%;
             animation: scanline 2.5s infinite linear;
             opacity: 1;
@@ -240,573 +488,2021 @@
         }
 
         @keyframes scanline {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        .td-money { font-family: 'Space Grotesk', sans-serif; color: var(--success); font-weight: 600; }
-        .td-sub { font-size: 0.85rem; }
+            0% {
+                background-position: 200% 0;
+            }
 
-        /* FOOTER */
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .td-money {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .td-sub {
+            font-size: 0.85rem;
+        }
+
         .footer-info {
-            display: flex; justify-content: space-between; padding: 16px 24px;
-            border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.8rem;
+            color: var(--text-muted);
             background: #f8fafc;
         }
 
-        /* TOAST NOTIFICATION */
         .toast {
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #ffffff; color: var(--text-main); padding: 12px 24px;
-            border-radius: 12px; font-size: 0.9rem; font-weight: 500;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border-subtle);
-            opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #ffffff;
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-subtle);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 1000;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.success { border-left: 4px solid var(--success); }
 
-        /* MODAL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: #ffffff; border-radius: 16px; width: 90%; max-width: 500px; border: 1px solid var(--border-subtle); box-shadow: 0 20px 50px rgba(0,0,0,0.15); transform: scale(0.9); transition: transform 0.3s; }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-head { padding: 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 0; max-height: 400px; overflow-y: auto; }
-        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 4px; line-height: 1; }
-        .close-btn:hover { color: var(--danger); }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
 
-        /* Responsive */
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-head {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
         @media (max-width: 900px) {
-            .bento-grid { grid-template-columns: 1fr 1fr; }
-            .bento-item.hero { grid-column: span 2; grid-row: span 1; }
-            .bento-item.hero .bento-value { font-size: 2.5rem; }
+            .bento-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .bento-item.hero {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .bento-item.hero .bento-value {
+                font-size: 2.5rem;
+            }
         }
+
         @media (max-width: 768px) {
-            .action-bar { flex-direction: column; align-items: stretch; gap: 10px; }
-            #searchBox, #binInput, button { width: 100%; }
-            .nav-tabs { width: 100%; }
-            .tab-btn { flex: 1; text-align: center; }
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            #searchBox,
+            button {
+                width: 100%;
+            }
+
+            .nav-tabs {
+                width: 100%;
+            }
+
+            .tab-btn {
+                flex: 1;
+                text-align: center;
+            }
         }
+
         @media (max-width: 640px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .bento-item.hero { grid-column: span 1; }
-            .bento-item.kurs-box, .bento-item.fee-card { grid-column: span 1; }
-            .header-top { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bento-item.hero {
+                grid-column: span 1;
+            }
+
+            .bento-item.kurs-box,
+            .bento-item.fee-card {
+                grid-column: span 1;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="bg-mesh"></div>
 
 <div class="container">
+
     <header>
+
         <div class="header-top">
+
             <div class="header-content">
                 <h1>Financial Report</h1>
-                <p id="reportDate">Rangkuman transaksi global & detail payment offer</p>
+                <p id="reportDate">
+                    Rangkuman transaksi global & detail payment offer
+                </p>
             </div>
+
             <div class="action-bar">
-                <input type="text" id="binInput" placeholder="Bin ID" title="Masukkan ID Bin JSONBin.io di sini">
+
                 <button onclick="loadData()" id="btnRefresh">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+
+                    <svg
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+
+                    </svg>
+
                     <span>Sync Data</span>
+
                 </button>
+
             </div>
+
         </div>
-        
+
         <nav class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('global')">📊 Global Report</button>
-            <button class="tab-btn" onclick="switchTab('segments')">📂 Detail Payment Offer</button>
+
+            <button
+                class="tab-btn active"
+                onclick="switchTab('global')">
+
+                📊 Global Report
+
+            </button>
+
+            <button
+                class="tab-btn"
+                onclick="switchTab('segments')">
+
+                📂 Detail Payment Offer
+
+            </button>
+
         </nav>
+
     </header>
 
-    <!-- HALAMAN 1: GLOBAL REPORT (Aggregated) + BENTO GRID -->
-    <main id="tab-global" class="tab-content active">
-        <!-- BENTO GRID HANYA DI SINI -->
-        <div class="bento-grid" id="statsGrid">
+
+    <!-- =======================================================
+         GLOBAL REPORT
+    ======================================================== -->
+
+    <main
+        id="tab-global"
+        class="tab-content active">
+
+        <div
+            class="bento-grid"
+            id="statsGrid">
+
             <div class="bento-item hero">
-                <div class="bento-label" id="lblTotalNet">Total Pendapatan (Global)</div>
-                <div class="bento-value" id="sumNet">Rp 0</div>
+
+                <div class="bento-label" id="lblTotalNet">
+                    Total Pendapatan (Global)
+                </div>
+
+                <div
+                    class="bento-value"
+                    id="sumNet">
+
+                    Rp 0
+
+                </div>
+
             </div>
-            
+
+
             <div class="bento-item small-card">
-                <div class="bento-label">Total Leads</div>
-                <div class="bento-value" id="sumLeads">0</div>
+
+                <div class="bento-label">
+                    Total Leads
+                </div>
+
+                <div
+                    class="bento-value"
+                    id="sumLeads">
+
+                    0
+
+                </div>
+
                 <div class="trend-up">
-                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+
+                    <svg
+                        width="12"
+                        height="12"
+                        fill="currentColor"
+                        viewBox="0 0 20 20">
+
+                        <path
+                            fill-rule="evenodd"
+                            d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd">
+
+                        </path>
+
+                    </svg>
+
                     Conversions
+
                 </div>
+
             </div>
-            
+
+
             <div class="bento-item small-card">
-                <div class="bento-label">Active Users</div>
-                <div class="bento-value" id="sumLinks">0</div>
-                <div class="trend-up" style="color: var(--accent);">
-                    Unique IDs
+
+                <div class="bento-label">
+                    Active Users
                 </div>
+
+                <div
+                    class="bento-value"
+                    id="sumLinks">
+
+                    0
+
+                </div>
+
+                <div
+                    class="trend-up"
+                    style="color: var(--accent);">
+
+                    Unique IDs
+
+                </div>
+
             </div>
+
 
             <div class="bento-item small-card kurs-box">
-                <div class="bento-label">Kurs USD → IDR</div>
-                <div class="bento-value" style="display:flex; align-items:center; gap:10px;">
-                    <span id="sumRate">—</span>
-                    <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">Rate</span>
+
+                <div class="bento-label">
+                    Kurs USD → IDR
                 </div>
+
+                <div
+                    class="bento-value"
+                    style="display:flex; align-items:center; gap:10px;">
+
+                    <span id="sumRate">
+                        —
+                    </span>
+
+                    <span
+                        style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">
+
+                        Rate
+
+                    </span>
+
+                </div>
+
             </div>
+
 
             <div class="bento-item small-card fee-card">
-                <div class="bento-label">Admin Fee</div>
-                <div class="bento-value" id="sumFee">0%</div>
-                <div class="trend-up" style="color: var(--danger); opacity: 0.8;">
+
+                <div class="bento-label">
+                    Admin Fee
                 </div>
+
+                <div
+                    class="bento-value"
+                    id="sumFee">
+
+                    0%
+
+                </div>
+
+                <div
+                    class="trend-up"
+                    style="color: var(--danger); opacity: 0.8;">
+
+                </div>
+
             </div>
+
         </div>
 
-        <!-- TABEL GLOBAL -->
+
+        <!-- GLOBAL TABLE -->
+
         <div class="data-section">
+
             <div class="data-header">
-                <h3>Global Transactions</h3>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <input type="text" id="searchBox" placeholder="Cari User ID..." oninput="filterTable()">
-                    <span style="color: var(--text-muted); font-size: 0.85rem;" id="rowCountGlobal">Menunggu Data...</span>
+
+                <h3>
+                    Global Transactions
+                </h3>
+
+                <div
+                    style="display:flex; gap:10px; align-items:center;">
+
+                    <input
+                        type="text"
+                        id="searchBox"
+                        placeholder="Cari User ID..."
+                        oninput="filterTable()">
+
+                    <span
+                        style="color: var(--text-muted); font-size: 0.85rem;"
+                        id="rowCountGlobal">
+
+                        Menunggu Data...
+
+                    </span>
+
                 </div>
+
             </div>
+
+
             <div class="table-container">
+
                 <table>
+
                     <thead>
+
                         <tr>
-                            <th style="width: 60px;">No.</th>
-                            <th>User ID</th>
-                            <th style="text-align:center;">Leads</th>
-                            <th style="text-align:right;">Payout</th>
-                            <th style="text-align:right;">Net Income</th>
+
+                            <th style="width: 60px;">
+                                No.
+                            </th>
+
+                            <th>
+                                User ID
+                            </th>
+
+                            <th style="text-align:center;">
+                                Leads
+                            </th>
+
+                            <th style="text-align:right;">
+                                Payout
+                            </th>
+
+                            <th style="text-align:right;">
+                                Net Income
+                            </th>
+
                         </tr>
+
                     </thead>
+
+
                     <tbody id="tableBodyGlobal">
+
                         <tr>
-                            <td colspan="5" style="text-align:center; opacity:0.5; padding:40px;">
-                                <div style="margin-bottom:10px; font-size:2rem;">📭</div>
-                                Silakan masukkan Bin ID dan klik <b>Sync Data</b> untuk memuat laporan.
+
+                            <td
+                                colspan="5"
+                                style="text-align:center; opacity:0.5; padding:40px;">
+
+                                <div
+                                    style="margin-bottom:10px; font-size:2rem;">
+
+                                    📭
+
+                                </div>
+
+                                Memuat data...
+
                             </td>
+
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
+
             <div class="footer-info">
-                <span>report greysyaa</span>
-                <span id="syncTime">Belum sinkron</span>
+
+                <span>
+                    report greysyaa
+                </span>
+
+                <span id="syncTime">
+                    Belum sinkron
+                </span>
+
             </div>
+
         </div>
+
     </main>
 
-    <!-- HALAMAN 2: DETAIL SEGMENTS (Strict) TANPA BENTO GRID -->
-    <main id="tab-segments-wrapper" class="tab-content">
+
+    <!-- =======================================================
+         DETAIL PAYMENT OFFER
+    ======================================================== -->
+
+    <main
+        id="tab-segments-wrapper"
+        class="tab-content">
+
         <div class="data-section">
-            <!-- Sub Navigation Segments -->
+
             <div class="segment-sub-nav">
-                <button class="sub-nav-btn active" onclick="switchSegmentView('resaliti', this)">
-                    <img src="https://kramat11.github.io/emoticon_imo/resality.png" width="20" height="20" style="vertical-align:middle; margin-right:6px;"> resality
+
+                <button
+                    class="sub-nav-btn active"
+                    onclick="switchSegmentView('resaliti', this)">
+
+                    <img
+                        src="https://kramat11.github.io/emoticon_imo/resality.png"
+                        width="20"
+                        height="20"
+                        style="vertical-align:middle; margin-right:6px;">
+
+                    resality
+
                 </button>
-                <button class="sub-nav-btn" onclick="switchSegmentView('Traffe', this)">
-                    <img src="https://kramat11.github.io/emoticon_imo/trafee.png" width="20" height="20" style="vertical-align:middle; margin-right:6px;"> Traffe
+
+
+                <button
+                    class="sub-nav-btn"
+                    onclick="switchSegmentView('Traffe', this)">
+
+                    <img
+                        src="https://kramat11.github.io/emoticon_imo/trafee.png"
+                        width="20"
+                        height="20"
+                        style="vertical-align:middle; margin-right:6px;">
+
+                    Traffe
+
                 </button>
-                <button class="sub-nav-btn" onclick="switchSegmentView('imo', this)">
-                    <img src="https://kramat11.github.io/emoticon_imo/imo.png" width="20" height="20" style="vertical-align:middle; margin-right:6px;"> IMO
+
+
+                <button
+                    class="sub-nav-btn"
+                    onclick="switchSegmentView('imo', this)">
+
+                    <img
+                        src="https://kramat11.github.io/emoticon_imo/imo.png"
+                        width="20"
+                        height="20"
+                        style="vertical-align:middle; margin-right:6px;">
+
+                    IMO
+
                 </button>
-                <button class="sub-nav-btn" onclick="switchSegmentView('lospoloss', this)" style="color:var(--danger); border-color:rgba(244,63,94,0.3);">
-                    <img src="https://kramat11.github.io/emoticon_imo/lp.png" width="20" height="20" style="vertical-align:middle; margin-right:6px;"> Lospoloss
+
+
+                <button
+                    class="sub-nav-btn"
+                    onclick="switchSegmentView('lospoloss', this)"
+                    style="color:var(--danger); border-color:rgba(244,63,94,0.3);">
+
+                    <img
+                        src="https://kramat11.github.io/emoticon_imo/lp.png"
+                        width="20"
+                        height="20"
+                        style="vertical-align:middle; margin-right:6px;">
+
+                    Lospoloss
+
                 </button>
+
             </div>
 
-            <div class="data-header" style="background: rgba(0,0,0,0.2);">
-                <h3 id="segmentTitle">Detail resality</h3>
+
+            <div
+                class="data-header"
+                style="background:#f8fafc;">
+
+                <h3 id="segmentTitle">
+                    Detail resality
+                </h3>
+
                 <div style="text-align:right;">
-                    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600;">Total Net (IDR)</div>
-                    <div id="segmentTotal" style="font-size:1.25rem; font-weight:700; color:var(--primary); font-family:'Space Grotesk';">Rp 0</div>
+
+                    <div
+                        style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600;">
+
+                        Total Net (IDR)
+
+                    </div>
+
+                    <div
+                        id="segmentTotal"
+                        style="font-size:1.25rem; font-weight:700; color:var(--primary); font-family:'Space Grotesk';">
+
+                        Rp 0
+
+                    </div>
+
                 </div>
+
             </div>
-            
+
+
             <div class="table-container">
+
                 <table>
+
                     <thead>
+
                         <tr>
-                            <th style="width: 60px;">No.</th>
-                            <th>User ID</th>
-                            <th style="text-align:center;">Leads</th>
-                            <th style="text-align:right;">Payout</th>
-                            <th style="text-align:right;">Net Income</th>
+
+                            <th style="width: 60px;">
+                                No.
+                            </th>
+
+                            <th>
+                                User ID
+                            </th>
+
+                            <th style="text-align:center;">
+                                Leads
+                            </th>
+
+                            <th style="text-align:right;">
+                                Payout
+                            </th>
+
+                            <th style="text-align:right;">
+                                Net Income
+                            </th>
+
                         </tr>
+
                     </thead>
+
+
                     <tbody id="tableBodySegments">
+
                         <tr>
-                            <td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">
-                                Pilih kategori di atas.
+
+                            <td
+                                colspan="5"
+                                style="text-align:center; opacity:0.5; padding:30px;">
+
+                                Memuat data...
+
                             </td>
+
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
+
             <div class="footer-info">
-                <span>report greysyaa</span>
-                <span id="segmentCount">0 Items</span>
+
+                <span>
+                    report greysyaa
+                </span>
+
+                <span id="segmentCount">
+                    0 Items
+                </span>
+
             </div>
+
         </div>
+
     </main>
+
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">Message</div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
+<!-- =======================================================
+     TOAST
+======================================================== -->
+
+<div
+    class="toast"
+    id="toast">
+
+    Message
+
+</div>
+
+
+<!-- =======================================================
+     MODAL
+======================================================== -->
+
+<div
+    class="modal-overlay"
+    id="modal"
+    onclick="closeModal(event)">
+
+    <div
+        class="modal-content"
+        onclick="event.stopPropagation()">
+
         <div class="modal-head">
-            <h3 style="color:var(--text-main);">Detail: <span id="modalTitle" style="color:var(--primary)"></span></h3>
-            <button class="close-btn" onclick="closeModal()">&times;</button>
+
+            <h3 style="color:var(--text-main);">
+
+                Detail:
+
+                <span
+                    id="modalTitle"
+                    style="color:var(--primary)">
+
+                </span>
+
+            </h3>
+
+
+            <button
+                class="close-btn"
+                onclick="closeModal()">
+
+                &times;
+
+            </button>
+
         </div>
+
+
         <div class="modal-body">
-            <table id="modalTable" style="padding: 10px;">
+
+            <table
+                id="modalTable"
+                style="padding: 10px;">
+
                 <thead>
+
                     <tr>
-                        <th>Negara</th>
-                        <th style="text-align:center;">Leads</th>
-                        <th style="text-align:right;">Revenue</th>
+
+                        <th>
+                            Negara
+                        </th>
+
+                        <th style="text-align:center;">
+                            Leads
+                        </th>
+
+                        <th style="text-align:right;">
+                            Revenue
+                        </th>
+
                     </tr>
+
                 </thead>
+
                 <tbody id="modalBody"></tbody>
+
             </table>
+
         </div>
+
     </div>
+
 </div>
+
 
 <script>
+
+    /* ========================================================
+       COUNTRY MAP
+    ======================================================== */
+
     const COUNTRY_MAP = {
-        "AF": "Afghanistan", "AX": "Åland Islands", "AL": "Albania", "DZ": "Algeria", "AS": "American Samoa",
-        "AD": "Andorra", "AO": "Angola", "AI": "Anguilla", "AQ": "Antarctica", "AG": "Antigua and Barbuda",
-        "AR": "Argentina", "AM": "Armenia", "AW": "Aruba", "AU": "Australia", "AT": "Austria",
-        "AZ": "Azerbaijan", "BS": "Bahamas", "BH": "Bahrain", "BD": "Bangladesh", "BB": "Barbados",
-        "BY": "Belarus", "BE": "Belgium", "BZ": "Belize", "BJ": "Benin", "BM": "Bermuda", "BT": "Bhutan",
-        "BO": "Bolivia", "BA": "Bosnia and Herzegovina", "BW": "Botswana", "BV": "Bouvet Island",
-        "BR": "Brazil", "IO": "British Indian Ocean Territory", "BN": "Brunei", "BG": "Bulgaria",
-        "BF": "Burkina Faso", "BI": "Burundi", "KH": "Cambodia", "CM": "Cameroon", "CA": "Canada",
-        "CV": "Cape Verde", "KY": "Cayman Islands", "CF": "Central African Republic", "TD": "Chad",
-        "CL": "Chile", "CN": "China", "CX": "Christmas Island", "CC": "Cocos (Keeling) Islands",
-        "CO": "Colombia", "KM": "Comoros", "CG": "Congo", "CD": "Congo (DRC)", "CK": "Cook Islands",
-        "CR": "Costa Rica", "CI": "Côte d'Ivoire", "HR": "Croatia", "CU": "Cuba", "CY": "Cyprus",
-        "CZ": "Czech Republic", "DK": "Denmark", "DJ": "Djibouti", "DM": "Dominica", "DO": "Dominican Republic",
-        "EC": "Ecuador", "EG": "Egypt", "SV": "El Salvador", "GQ": "Equatorial Guinea", "ER": "Eritrea",
-        "EE": "Estonia", "ET": "Ethiopia", "FK": "Falkland Islands", "FO": "Faroe Islands", "FJ": "Fiji",
-        "FI": "Finland", "FR": "France", "GF": "French Guiana", "PF": "French Polynesia", "TF": "French Southern Territories",
-        "GA": "Gabon", "GM": "Gambia", "GE": "Georgia", "DE": "Germany", "GH": "Ghana", "GI": "Gibraltar",
-        "GR": "Greece", "GL": "Greenland", "GD": "Grenada", "GP": "Guadeloupe", "GU": "Guam", "GT": "Guatemala",
-        "GG": "Guernsey", "GN": "Guinea", "GW": "Guinea-Bissau", "GY": "Guyana", "HT": "Haiti",
-        "HM": "Heard Island and McDonald Islands", "VA": "Holy See", "HN": "Honduras", "HK": "Hong Kong",
-        "HU": "Hungary", "IS": "Iceland", "IN": "India", "ID": "Indonesia", "IR": "Iran", "IQ": "Iraq",
-        "IE": "Ireland", "IM": "Isle of Man", "IL": "Israel", "IT": "Italy", "JM": "Jamaica", "JP": "Japan",
-        "JE": "Jersey", "JO": "Jordan", "KZ": "Kazakhstan", "KE": "Kenya", "KI": "Kiribati", "KP": "North Korea",
-        "KR": "South Korea", "KW": "Kuwait", "KG": "Kyrgyzstan", "LA": "Laos", "LV": "Latvia", "LB": "Lebanon",
-        "LS": "Lesotho", "LR": "Liberia", "LY": "Libya", "LI": "Liechtenstein", "LT": "Lithuania", "LU": "Luxembourg",
-        "MO": "Macao", "MK": "North Macedonia", "MG": "Madagascar", "MW": "Malawi", "MY": "Malaysia",
-        "MV": "Maldives", "ML": "Mali", "MT": "Malta", "MH": "Marshall Islands", "MQ": "Martinique",
-        "MR": "Mauritania", "MU": "Mauritius", "YT": "Mayotte", "MX": "Mexico", "FM": "Micronesia",
-        "MD": "Moldova", "MC": "Monaco", "MN": "Mongolia", "ME": "Montenegro", "MS": "Montserrat",
-        "MA": "Morocco", "MZ": "Mozambique", "MM": "Myanmar", "NA": "Namibia", "NR": "Nauru", "NP": "Nepal",
-        "NL": "Netherlands", "NC": "New Caledonia", "NZ": "New Zealand", "NI": "Nicaragua", "NE": "Niger",
-        "NG": "Nigeria", "NU": "Niue", "NF": "Norfolk Island", "MP": "Northern Mariana Islands",
-        "NO": "Norway", "OM": "Oman", "PK": "Pakistan", "PW": "Palau", "PS": "Palestine", "PA": "Panama",
-        "PG": "Papua New Guinea", "PY": "Paraguay", "PE": "Peru", "PH": "Philippines", "PN": "Pitcairn",
-        "PL": "Poland", "PT": "Portugal", "PR": "Puerto Rico", "QA": "Qatar", "RE": "Réunion", "RO": "Romania",
-        "RU": "Russia", "RW": "Rwanda", "BL": "Saint Barthélemy", "SH": "Saint Helena", "KN": "Saint Kitts and Nevis",
-        "LC": "Saint Lucia", "MF": "Saint Martin", "PM": "Saint Pierre and Miquelon", "VC": "Saint Vincent and the Grenadines",
-        "WS": "Samoa", "SM": "San Marino", "ST": "São Tomé and Príncipe", "SA": "Saudi Arabia", "SN": "Senegal",
-        "RS": "Serbia", "SC": "Seychelles", "SL": "Sierra Leone", "SG": "Singapore", "SX": "Sint Maarten",
-        "SK": "Slovakia", "SI": "Slovenia", "SB": "Solomon Islands", "SO": "Somalia", "ZA": "South Africa",
-        "GS": "South Georgia and the South Sandwich Islands", "SS": "South Sudan", "ES": "Spain", "LK": "Sri Lanka",
-        "SD": "Sudan", "SR": "Suriname", "SJ": "Svalbard and Jan Mayen", "SZ": "Eswatini", "SE": "Sweden",
-        "CH": "Switzerland", "SY": "Syria", "TW": "Taiwan", "TJ": "Tajikistan", "TZ": "Tanzania", "TH": "Thailand",
-        "TL": "Timor-Leste", "TG": "Togo", "TK": "Tokelau", "TO": "Tonga", "TT": "Trinidad and Tobago",
-        "TN": "Tunisia", "TR": "Turkey", "TM": "Turkmenistan", "TC": "Turks and Caicos Islands", "TV": "Tuvalu",
-        "UG": "Uganda", "UA": "Ukraine", "AE": "United Arab Emirates", "GB": "United Kingdom", "US": "United States",
-        "UM": "U.S. Minor Outlying Islands", "UY": "Uruguay", "UZ": "Uzbekistan", "VU": "Vanuatu",
-        "VE": "Venezuela", "VN": "Vietnam", "VG": "British Virgin Islands", "VI": "U.S. Virgin Islands",
-        "WF": "Wallis and Futuna", "EH": "Western Sahara", "YE": "Yemen", "ZM": "Zambia", "ZW": "Zimbabwe"
+        "AF":"Afghanistan","AX":"Åland Islands","AL":"Albania","DZ":"Algeria",
+        "AS":"American Samoa","AD":"Andorra","AO":"Angola","AI":"Anguilla",
+        "AQ":"Antarctica","AG":"Antigua and Barbuda","AR":"Argentina",
+        "AM":"Armenia","AW":"Aruba","AU":"Australia","AT":"Austria",
+        "AZ":"Azerbaijan","BS":"Bahamas","BH":"Bahrain","BD":"Bangladesh",
+        "BB":"Barbados","BY":"Belarus","BE":"Belgium","BZ":"Belize",
+        "BJ":"Benin","BM":"Bermuda","BT":"Bhutan","BO":"Bolivia",
+        "BA":"Bosnia and Herzegovina","BW":"Botswana","BV":"Bouvet Island",
+        "BR":"Brazil","IO":"British Indian Ocean Territory","BN":"Brunei",
+        "BG":"Bulgaria","BF":"Burkina Faso","BI":"Burundi","KH":"Cambodia",
+        "CM":"Cameroon","CA":"Canada","CV":"Cape Verde","KY":"Cayman Islands",
+        "CF":"Central African Republic","TD":"Chad","CL":"Chile","CN":"China",
+        "CX":"Christmas Island","CC":"Cocos (Keeling) Islands","CO":"Colombia",
+        "KM":"Comoros","CG":"Congo","CD":"Congo (DRC)","CK":"Cook Islands",
+        "CR":"Costa Rica","CI":"Côte d'Ivoire","HR":"Croatia","CU":"Cuba",
+        "CY":"Cyprus","CZ":"Czech Republic","DK":"Denmark","DJ":"Djibouti",
+        "DM":"Dominica","DO":"Dominican Republic","EC":"Ecuador","EG":"Egypt",
+        "SV":"El Salvador","GQ":"Equatorial Guinea","ER":"Eritrea",
+        "EE":"Estonia","ET":"Ethiopia","FK":"Falkland Islands",
+        "FO":"Faroe Islands","FJ":"Fiji","FI":"Finland","FR":"France",
+        "GF":"French Guiana","PF":"French Polynesia",
+        "TF":"French Southern Territories","GA":"Gabon","GM":"Gambia",
+        "GE":"Georgia","DE":"Germany","GH":"Ghana","GI":"Gibraltar",
+        "GR":"Greece","GL":"Greenland","GD":"Grenada","GP":"Guadeloupe",
+        "GU":"Guam","GT":"Guatemala","GG":"Guernsey","GN":"Guinea",
+        "GW":"Guinea-Bissau","GY":"Guyana","HT":"Haiti",
+        "HM":"Heard Island and McDonald Islands","VA":"Holy See",
+        "HN":"Honduras","HK":"Hong Kong","HU":"Hungary","IS":"Iceland",
+        "IN":"India","ID":"Indonesia","IR":"Iran","IQ":"Iraq","IE":"Ireland",
+        "IM":"Isle of Man","IL":"Israel","IT":"Italy","JM":"Jamaica",
+        "JP":"Japan","JE":"Jersey","JO":"Jordan","KZ":"Kazakhstan",
+        "KE":"Kenya","KI":"Kiribati","KP":"North Korea","KR":"South Korea",
+        "KW":"Kuwait","KG":"Kyrgyzstan","LA":"Laos","LV":"Latvia",
+        "LB":"Lebanon","LS":"Lesotho","LR":"Liberia","LY":"Libya",
+        "LI":"Liechtenstein","LT":"Lithuania","LU":"Luxembourg","MO":"Macao",
+        "MK":"North Macedonia","MG":"Madagascar","MW":"Malawi","MY":"Malaysia",
+        "MV":"Maldives","ML":"Mali","MT":"Malta","MH":"Marshall Islands",
+        "MQ":"Martinique","MR":"Mauritania","MU":"Mauritius","YT":"Mayotte",
+        "MX":"Mexico","FM":"Micronesia","MD":"Moldova","MC":"Monaco",
+        "MN":"Mongolia","ME":"Montenegro","MS":"Montserrat","MA":"Morocco",
+        "MZ":"Mozambique","MM":"Myanmar","NA":"Namibia","NR":"Nauru",
+        "NP":"Nepal","NL":"Netherlands","NC":"New Caledonia","NZ":"New Zealand",
+        "NI":"Nicaragua","NE":"Niger","NG":"Nigeria","NU":"Niue",
+        "NF":"Norfolk Island","MP":"Northern Mariana Islands","NO":"Norway",
+        "OM":"Oman","PK":"Pakistan","PW":"Palau","PS":"Palestine","PA":"Panama",
+        "PG":"Papua New Guinea","PY":"Paraguay","PE":"Peru","PH":"Philippines",
+        "PN":"Pitcairn","PL":"Poland","PT":"Portugal","PR":"Puerto Rico",
+        "QA":"Qatar","RE":"Réunion","RO":"Romania","RU":"Russia","RW":"Rwanda",
+        "BL":"Saint Barthélemy","SH":"Saint Helena",
+        "KN":"Saint Kitts and Nevis","LC":"Saint Lucia","MF":"Saint Martin",
+        "PM":"Saint Pierre and Miquelon",
+        "VC":"Saint Vincent and the Grenadines","WS":"Samoa","SM":"San Marino",
+        "ST":"São Tomé and Príncipe","SA":"Saudi Arabia","SN":"Senegal",
+        "RS":"Serbia","SC":"Seychelles","SL":"Sierra Leone","SG":"Singapore",
+        "SX":"Sint Maarten","SK":"Slovakia","SI":"Slovenia",
+        "SB":"Solomon Islands","SO":"Somalia","ZA":"South Africa",
+        "GS":"South Georgia and the South Sandwich Islands",
+        "SS":"South Sudan","ES":"Spain","LK":"Sri Lanka","SD":"Sudan",
+        "SR":"Suriname","SJ":"Svalbard and Jan Mayen","SZ":"Eswatini",
+        "SE":"Sweden","CH":"Switzerland","SY":"Syria","TW":"Taiwan",
+        "TJ":"Tajikistan","TZ":"Tanzania","TH":"Thailand",
+        "TL":"Timor-Leste","TG":"Togo","TK":"Tokelau","TO":"Tonga",
+        "TT":"Trinidad and Tobago","TN":"Tunisia","TR":"Turkey",
+        "TM":"Turkmenistan","TC":"Turks and Caicos Islands","TV":"Tuvalu",
+        "UG":"Uganda","UA":"Ukraine","AE":"United Arab Emirates",
+        "GB":"United Kingdom","US":"United States",
+        "UM":"U.S. Minor Outlying Islands","UY":"Uruguay","UZ":"Uzbekistan",
+        "VU":"Vanuatu","VE":"Venezuela","VN":"Vietnam",
+        "VG":"British Virgin Islands","VI":"U.S. Virgin Islands",
+        "WF":"Wallis and Futuna","EH":"Western Sahara","YE":"Yemen",
+        "ZM":"Zambia","ZW":"Zimbabwe"
     };
 
-    const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
-    const ACCESS_KEY  = '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
-    
-    let allRows = []; 
-    let currentSegmentView = 'resaliti';
+
+    /* ========================================================
+       JSONBIN CONFIG
+       ======================================================== */
+
+    const JSONBIN_BASE =
+        'https://api.jsonbin.io/v3';
+
+    const ACCESS_KEY =
+        '$2a$10$Skk9eX48vInKZec7C0MBI.EaeMgZpXW6A7lSYYsdKbQJumeZPuFAy';
+
+
+    /*
+     * ========================================================
+     * BIN ID
+     *
+     * GANTI HANYA BAGIAN INI
+     * ========================================================
+     */
+
+    const BIN_ID =
+        '6ac57d3effd5d16053544ac1';
+
+
+    /* ========================================================
+       GLOBAL STATE
+       ======================================================== */
+
+    let allRows = [];
+
+    let currentSegmentView =
+        'resaliti';
+
+
+    /* ========================================================
+       FORMATTER
+       ======================================================== */
 
     const fmt = {
-        usd:  v => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(v),
-        idr:  v => new Intl.NumberFormat('id-ID', {style:'currency', currency:'IDR', maximumFractionDigits:0}).format(v),
-        rate: v => new Intl.NumberFormat('id-ID').format(v)
+
+        usd: v =>
+            new Intl.NumberFormat(
+                'en-US',
+                {
+                    style: 'currency',
+                    currency: 'USD'
+                }
+            ).format(Number(v) || 0),
+
+        idr: v =>
+            new Intl.NumberFormat(
+                'id-ID',
+                {
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0
+                }
+            ).format(Number(v) || 0),
+
+        rate: v =>
+            new Intl.NumberFormat(
+                'id-ID'
+            ).format(Number(v) || 0)
+
     };
 
+
+    /* ========================================================
+       TAB SWITCH
+    ======================================================== */
+
     function switchTab(tabId) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        const index = tabId === 'global' ? 0 : 1;
-        document.querySelectorAll('.tab-btn')[index].classList.add('active');
-        
-        // Tab Handling Update
+
+        document
+            .querySelectorAll('.tab-btn')
+            .forEach(b =>
+                b.classList.remove('active')
+            );
+
+        document
+            .querySelectorAll('.tab-content')
+            .forEach(c =>
+                c.classList.remove('active')
+            );
+
+
+        const index =
+            tabId === 'global'
+                ? 0
+                : 1;
+
+
+        document
+            .querySelectorAll('.tab-btn')[index]
+            .classList.add('active');
+
+
         if (tabId === 'global') {
-            document.getElementById('tab-global').classList.add('active');
-            document.getElementById('tab-segments-wrapper').classList.remove('active');
+
+            document
+                .getElementById('tab-global')
+                .classList.add('active');
+
+            document
+                .getElementById('tab-segments-wrapper')
+                .classList.remove('active');
+
         } else {
-            document.getElementById('tab-global').classList.remove('active');
-            document.getElementById('tab-segments-wrapper').classList.add('active');
+
+            document
+                .getElementById('tab-global')
+                .classList.remove('active');
+
+            document
+                .getElementById('tab-segments-wrapper')
+                .classList.add('active');
+
             renderSegmentTable();
+
         }
+
     }
 
-    function showToast(msg, type = 'success') {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = `toast show ${type}`;
-        setTimeout(() => t.classList.remove('show'), 3000);
+
+    /* ========================================================
+       TOAST
+    ======================================================== */
+
+    function showToast(
+        msg,
+        type = 'success'
+    ) {
+
+        const t =
+            document.getElementById('toast');
+
+        t.textContent =
+            msg;
+
+        t.className =
+            `toast show ${type}`;
+
+
+        setTimeout(() => {
+
+            t.classList.remove('show');
+
+        }, 3000);
+
     }
+
+
+    /* ========================================================
+       LOAD DATA
+    ======================================================== */
 
     async function loadData() {
-        const binInput = document.getElementById('binInput');
-        const btn = document.getElementById('btnRefresh');
-        const binId = binInput.value.trim();
 
-        if (!binId) {
-            showToast('Masukkan Bin ID terlebih dahulu!', 'error');
-            binInput.focus();
+        const btn =
+            document.getElementById('btnRefresh');
+
+
+        if (
+            !BIN_ID ||
+            BIN_ID === 'MASUKKAN_BIN_ID_DISINI'
+        ) {
+
+            showToast(
+                'BIN_ID belum diatur di script!',
+                'error'
+            );
+
             return;
+
         }
+
 
         btn.disabled = true;
-        btn.innerHTML = '<span style="animation: spin 1s linear infinite; display:inline-block;">↻</span> Syncing...';
-        showToast(`Menghubungkan ke Bin: ${binId}...`, 'success');
+
+        btn.innerHTML = `
+            <span
+                style="
+                    animation:spin 1s linear infinite;
+                    display:inline-block;
+                "
+            >
+                ↻
+            </span>
+            Syncing...
+        `;
+
+
+        showToast(
+            `Menghubungkan ke Bin: ${BIN_ID}...`,
+            'success'
+        );
+
 
         try {
-            const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
-                headers: { 'X-Access-Key': ACCESS_KEY }
-            });
 
-            if (!res.ok) {
-                const errBody = await res.json().catch(() => ({}));
-                if (res.status === 401 || res.status === 403) throw new Error('Access Denied (Cek Key/Bin Private).');
-                if (res.status === 404) throw new Error('Bin ID tidak ditemukan (404).');
-                throw new Error(errBody.message || `HTTP Error ${res.status}`);
-            }
-
-            const result = await res.json();
-            const data = (result && result.record !== undefined) ? result.record : result;
-
-            if (!data || !Array.isArray(data.rows) || data.rows.length === 0) {
-                throw new Error('Database kosong atau format salah.');
-            }
-
-            allRows = [...data.rows];
-            
-            // --- PERBAIKAN AGREGASI ---
-            const aggregatedMap = {};
-            allRows.forEach(r => {
-                if(!aggregatedMap[r.id]) {
-                    aggregatedMap[r.id] = { 
-                        id: r.id, 
-                        count: 0, 
-                        finalNetIDR: 0,
-                        totalPayoutUSD: 0,
-                        adminPercent: r.adminPercent 
-                    };
-                }
-                aggregatedMap[r.id].count += r.count;
-                aggregatedMap[r.id].finalNetIDR += r.finalNetIDR;
-                aggregatedMap[r.id].totalPayoutUSD += (r.totalPayoutUSD || 0);
-            });
-            const aggregatedList = Object.values(aggregatedMap);
-            // ---------------------------
-
-            let totalNet = 0, totalLeads = 0, totalAdminPercent = 0;
-            aggregatedList.forEach(r => { 
-                totalNet += r.finalNetIDR; 
-                totalLeads += r.count;
-                if(r.adminPercent) totalAdminPercent += r.adminPercent; 
-            });
-
-            const avgFeePercent = data.fee || (allRows.length > 0 ? (totalAdminPercent / allRows.length) : 0);
-
-            // Update UI Stats
-            document.getElementById('sumNet').textContent = fmt.idr(totalNet);
-            document.getElementById('sumLeads').textContent = totalLeads.toLocaleString('id-ID');
-            document.getElementById('sumLinks').textContent = aggregatedList.length;
-            document.getElementById('sumFee').textContent = avgFeePercent.toFixed(1) + '%';
-            
-            if(data.rate) document.getElementById('sumRate').textContent = `Rp ${fmt.rate(data.rate)}`;
-            
-            document.getElementById('rowCountGlobal').textContent = `${aggregatedList.length} Items`;
-            document.getElementById('syncTime').textContent = `Last sync: ${new Date().toLocaleTimeString('id-ID')}`;
-
-            renderGlobalTable(aggregatedList);
-            renderSegmentTable();
-            
-            showToast('Data berhasil dimuat!', 'success');
-
-        } catch (err) {
-            showToast('Error: ' + err.message, 'error');
-            console.error(err);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> <span>Sync Data</span>';
-        }
-    }
-
-    // RENDER GLOBAL (AGGREGATED)
-    function renderGlobalTable(rows) {
-        const tbody = document.getElementById('tableBodyGlobal');
-        tbody.innerHTML = '';
-        if (rows.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">Tidak ada data ditemukan.</td></tr>`;
-            return;
-        }
-        rows.forEach((item, i) => {
-            const tr = document.createElement('tr');
-            tr.onclick = () => openModal(item.id, true);
-            
-            tr.innerHTML = `
-                <td style="color: var(--text-muted);">${i + 1}</td>
-                <td>
-                    <div class="td-main">
-                        <span class="td-id">${esc(String(item.id))}</span>
-                    </div>
-                </td>
-                <td style="text-align:center; font-weight:600;">${item.count.toLocaleString('id-ID')}</td>
-                <td style="text-align:right;" class="td-sub">${fmt.usd(item.totalPayoutUSD || 0)}</td>
-                <td style="text-align:right;" class="td-money">${fmt.idr(item.finalNetIDR)}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function filterTable() {
-        const q = document.getElementById('searchBox').value.toLowerCase();
-        const aggregatedMap = {};
-        allRows.filter(r => String(r.id).toLowerCase().includes(q)).forEach(r => {
-            if(!aggregatedMap[r.id]) aggregatedMap[r.id] = { id: r.id, count:0, finalNetIDR:0, totalPayoutUSD:0, adminPercent: r.adminPercent };
-            aggregatedMap[r.id].count += r.count;
-            aggregatedMap[r.id].finalNetIDR += r.finalNetIDR;
-            aggregatedMap[r.id].totalPayoutUSD += r.totalPayoutUSD;
-        });
-        const list = Object.values(aggregatedMap).sort((a,b) => b.finalNetIDR - a.finalNetIDR);
-        renderGlobalTable(list);
-    }
-
-    // RENDER SEGMENTS (STRICT)
-    function switchSegmentView(category, btnElement) {
-        currentSegmentView = category;
-        document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-        renderSegmentTable();
-    }
-
-    function renderSegmentTable() {
-        const dataToShow = allRows.filter(d => d.category === currentSegmentView);
-        document.getElementById('segmentTitle').textContent = `Detail ${currentSegmentView.charAt(0).toUpperCase() + currentSegmentView.slice(1)}`;
-        
-        const total = dataToShow.reduce((sum, item) => sum + item.finalNetIDR, 0);
-        document.getElementById('segmentTotal').textContent = fmt.idr(total);
-        document.getElementById('segmentCount').textContent = `${dataToShow.length} Items`;
-
-        const tbody = document.getElementById('tableBodySegments');
-        tbody.innerHTML = '';
-        
-        if(dataToShow.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; opacity:0.5; padding:30px;">Belum ada data untuk kategori ini.</td></tr>`;
-            return;
-        }
-        
-        dataToShow.forEach((item, i) => {
-            const tr = document.createElement('tr');
-            tr.onclick = () => openModal(item.id, false);
-            
-            tr.innerHTML = `
-                <td style="color: var(--text-muted);">${i+1}</td>
-                <td>
-                    <div class="td-main">
-                        <span class="td-id">${esc(String(item.id))}</span>
-                    </div>
-                </td>
-                <td style="text-align:center; font-weight:600;">${item.count}</td>
-                <td style="text-align:right;" class="td-sub">${fmt.usd(item.totalPayoutUSD)}</td>
-                <td style="text-align:right;" class="td-money">${fmt.idr(item.finalNetIDR)}</td>`;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function esc(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;');
-    }
-
-    function openModal(id, isAggregatedView = false) {
-        let item;
-        
-        if (isAggregatedView) {
-            const agg = {
-                id: id,
-                count: 0,
-                countries: {}
-            };
-            allRows.forEach(d => {
-                if(d.id === id) {
-                    agg.count += d.count;
-                    if(d.countries) {
-                        for(let [code, data] of Object.entries(d.countries)) {
-                            if(!agg.countries[code]) agg.countries[code] = { count: 0, totalUSD: 0 };
-                            agg.countries[code].count += data.count;
-                            agg.countries[code].totalUSD += data.totalUSD;
+            const res =
+                await fetch(
+                    `${JSONBIN_BASE}/b/${BIN_ID}/latest`,
+                    {
+                        headers: {
+                            'X-Access-Key': ACCESS_KEY
                         }
                     }
+                );
+
+
+            if (!res.ok) {
+
+                const errBody =
+                    await res
+                        .json()
+                        .catch(() => ({}));
+
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        'Access Denied (Cek Key/Bin Private).'
+                    );
+
                 }
+
+
+                if (
+                    res.status === 404
+                ) {
+
+                    throw new Error(
+                        'Bin ID tidak ditemukan (404).'
+                    );
+
+                }
+
+
+                throw new Error(
+                    errBody.message ||
+                    `HTTP Error ${res.status}`
+                );
+
+            }
+
+
+            const result =
+                await res.json();
+
+
+            const data =
+                (
+                    result &&
+                    result.record !== undefined
+                )
+                    ? result.record
+                    : result;
+
+
+            if (
+                !data ||
+                !Array.isArray(data.rows) ||
+                data.rows.length === 0
+            ) {
+
+                throw new Error(
+                    'Database kosong atau format salah.'
+                );
+
+            }
+
+
+            allRows =
+                [...data.rows];
+
+
+            /* ================================================
+               AGGREGATION
+            ================================================= */
+
+            const aggregatedMap = {};
+
+
+            allRows.forEach(r => {
+
+                if (!aggregatedMap[r.id]) {
+
+                    aggregatedMap[r.id] = {
+
+                        id: r.id,
+
+                        count: 0,
+
+                        finalNetIDR: 0,
+
+                        totalPayoutUSD: 0,
+
+                        adminPercent:
+                            r.adminPercent
+
+                    };
+
+                }
+
+
+                aggregatedMap[r.id].count +=
+                    Number(r.count) || 0;
+
+
+                aggregatedMap[r.id].finalNetIDR +=
+                    Number(r.finalNetIDR) || 0;
+
+
+                aggregatedMap[r.id].totalPayoutUSD +=
+                    Number(r.totalPayoutUSD) || 0;
+
             });
-            item = agg;
-        } else {
-            item = allRows.find(d => d.id === id && d.category === currentSegmentView);
+
+
+            const aggregatedList =
+                Object.values(
+                    aggregatedMap
+                );
+
+
+            /* ================================================
+               TOTALS
+            ================================================= */
+
+            let totalNet = 0;
+
+            let totalLeads = 0;
+
+            let totalAdminPercent = 0;
+
+
+            aggregatedList.forEach(r => {
+
+                totalNet +=
+                    r.finalNetIDR;
+
+
+                totalLeads +=
+                    r.count;
+
+
+                if (r.adminPercent) {
+
+                    totalAdminPercent +=
+                        Number(r.adminPercent);
+
+                }
+
+            });
+
+
+            const avgFeePercent =
+                data.fee ||
+                (
+                    allRows.length > 0
+                        ? (
+                            totalAdminPercent /
+                            allRows.length
+                        )
+                        : 0
+                );
+
+
+            /* ================================================
+               UPDATE STATS
+            ================================================= */
+
+            document
+                .getElementById('sumNet')
+                .textContent =
+                fmt.idr(totalNet);
+
+
+            document
+                .getElementById('sumLeads')
+                .textContent =
+                totalLeads.toLocaleString(
+                    'id-ID'
+                );
+
+
+            document
+                .getElementById('sumLinks')
+                .textContent =
+                aggregatedList.length;
+
+
+            document
+                .getElementById('sumFee')
+                .textContent =
+                Number(avgFeePercent).toFixed(1) +
+                '%';
+
+
+            if (data.rate) {
+
+                document
+                    .getElementById('sumRate')
+                    .textContent =
+                    `Rp ${fmt.rate(data.rate)}`;
+
+            }
+
+
+            document
+                .getElementById('rowCountGlobal')
+                .textContent =
+                `${aggregatedList.length} Items`;
+
+
+            document
+                .getElementById('syncTime')
+                .textContent =
+                `Last sync: ${
+                    new Date()
+                        .toLocaleTimeString('id-ID')
+                }`;
+
+
+            renderGlobalTable(
+                aggregatedList
+            );
+
+
+            renderSegmentTable();
+
+
+            showToast(
+                'Data berhasil dimuat!',
+                'success'
+            );
+
+
+        } catch (err) {
+
+            showToast(
+                'Error: ' + err.message,
+                'error'
+            );
+
+            console.error(err);
+
+        } finally {
+
+            btn.disabled = false;
+
+            btn.innerHTML = `
+                <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+
+                </svg>
+
+                <span>
+                    Sync Data
+                </span>
+            `;
+
         }
 
-        if(!item || !item.countries || Object.keys(item.countries).length === 0) {
-            showToast("Detail negara tidak tersedia.", "error");
-            return;
-        }
+    }
 
-        document.getElementById('modalTitle').textContent = id + (isAggregatedView ? ' (Global)' : '');
-        const tbody = document.getElementById('modalBody');
+
+    /* ========================================================
+       GLOBAL TABLE
+    ======================================================== */
+
+    function renderGlobalTable(rows) {
+
+        const tbody =
+            document.getElementById(
+                'tableBodyGlobal'
+            );
+
+
         tbody.innerHTML = '';
 
-        const sortedCountries = Object.entries(item.countries).sort((a,b) => b[1].count - a[1].count);
 
-        sortedCountries.forEach(([code, data]) => {
-            const countryName = COUNTRY_MAP[code] || code;
-            const flagUrl = `https://jennyhebya.github.io/country_flags/${code.toUpperCase()}.svg`;
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="display:flex; align-items:center; gap:10px; padding:12px 0;">
-                    <img src="${flagUrl}" width="20" height="14" style="border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,0.2);" onerror="this.style.display='none'">
-                    <span>${countryName}</span>
-                </td>
-                <td style="text-align:center; font-weight:600;">${data.count}</td>
-                <td style="text-align:right; color:var(--primary); font-weight:600;">${fmt.usd(data.totalUSD)}</td>
+        if (!rows.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="5"
+                        style="
+                            text-align:center;
+                            opacity:0.5;
+                            padding:30px;
+                        "
+                    >
+                        Tidak ada data ditemukan.
+                    </td>
+                </tr>
             `;
+
+            return;
+
+        }
+
+
+        rows.forEach((item, i) => {
+
+            const tr =
+                document.createElement('tr');
+
+
+            tr.onclick = () =>
+                openModal(
+                    item.id,
+                    true
+                );
+
+
+            tr.innerHTML = `
+
+                <td
+                    style="
+                        color:var(--text-muted);
+                    "
+                >
+                    ${i + 1}
+                </td>
+
+                <td>
+
+                    <div class="td-main">
+
+                        <span class="td-id">
+                            ${esc(String(item.id))}
+                        </span>
+
+                    </div>
+
+                </td>
+
+                <td
+                    style="
+                        text-align:center;
+                        font-weight:600;
+                    "
+                >
+                    ${Number(item.count || 0)
+                        .toLocaleString('id-ID')}
+                </td>
+
+                <td
+                    style="text-align:right;"
+                    class="td-sub"
+                >
+                    ${fmt.usd(
+                        item.totalPayoutUSD || 0
+                    )}
+                </td>
+
+                <td
+                    style="text-align:right;"
+                    class="td-money"
+                >
+                    ${fmt.idr(
+                        item.finalNetIDR || 0
+                    )}
+                </td>
+
+            `;
+
+
             tbody.appendChild(tr);
+
         });
 
-        document.getElementById('modal').classList.add('active');
     }
 
-    function closeModal(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('modal').classList.remove('active');
+
+    /* ========================================================
+       SEARCH
+    ======================================================== */
+
+    function filterTable() {
+
+        const q =
+            document
+                .getElementById('searchBox')
+                .value
+                .toLowerCase();
+
+
+        const aggregatedMap = {};
+
+
+        allRows
+            .filter(r =>
+                String(r.id)
+                    .toLowerCase()
+                    .includes(q)
+            )
+            .forEach(r => {
+
+                if (!aggregatedMap[r.id]) {
+
+                    aggregatedMap[r.id] = {
+
+                        id: r.id,
+
+                        count: 0,
+
+                        finalNetIDR: 0,
+
+                        totalPayoutUSD: 0,
+
+                        adminPercent:
+                            r.adminPercent
+
+                    };
+
+                }
+
+
+                aggregatedMap[r.id].count +=
+                    Number(r.count) || 0;
+
+
+                aggregatedMap[r.id].finalNetIDR +=
+                    Number(r.finalNetIDR) || 0;
+
+
+                aggregatedMap[r.id].totalPayoutUSD +=
+                    Number(r.totalPayoutUSD) || 0;
+
+            });
+
+
+        const list =
+            Object.values(
+                aggregatedMap
+            )
+            .sort(
+                (a, b) =>
+                    b.finalNetIDR -
+                    a.finalNetIDR
+            );
+
+
+        renderGlobalTable(list);
+
     }
+
+
+    /* ========================================================
+       SEGMENT SWITCH
+    ======================================================== */
+
+    function switchSegmentView(
+        category,
+        btnElement
+    ) {
+
+        currentSegmentView =
+            category;
+
+
+        document
+            .querySelectorAll(
+                '.sub-nav-btn'
+            )
+            .forEach(b =>
+                b.classList.remove('active')
+            );
+
+
+        btnElement.classList.add(
+            'active'
+        );
+
+
+        renderSegmentTable();
+
+    }
+
+
+    /* ========================================================
+       SEGMENT TABLE
+    ======================================================== */
+
+    function renderSegmentTable() {
+
+        const dataToShow =
+            allRows.filter(
+                d =>
+                    d.category ===
+                    currentSegmentView
+            );
+
+
+        document
+            .getElementById(
+                'segmentTitle'
+            )
+            .textContent =
+            `Detail ${
+                currentSegmentView
+                    .charAt(0)
+                    .toUpperCase()
+                +
+                currentSegmentView
+                    .slice(1)
+            }`;
+
+
+        const total =
+            dataToShow.reduce(
+                (sum, item) =>
+                    sum +
+                    (
+                        Number(
+                            item.finalNetIDR
+                        ) || 0
+                    ),
+                0
+            );
+
+
+        document
+            .getElementById(
+                'segmentTotal'
+            )
+            .textContent =
+            fmt.idr(total);
+
+
+        document
+            .getElementById(
+                'segmentCount'
+            )
+            .textContent =
+            `${dataToShow.length} Items`;
+
+
+        const tbody =
+            document.getElementById(
+                'tableBodySegments'
+            );
+
+
+        tbody.innerHTML = '';
+
+
+        if (!dataToShow.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="5"
+                        style="
+                            text-align:center;
+                            opacity:0.5;
+                            padding:30px;
+                        "
+                    >
+                        Belum ada data untuk kategori ini.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        dataToShow.forEach(
+            (item, i) => {
+
+                const tr =
+                    document.createElement('tr');
+
+
+                tr.onclick = () =>
+                    openModal(
+                        item.id,
+                        false
+                    );
+
+
+                tr.innerHTML = `
+
+                    <td
+                        style="
+                            color:var(--text-muted);
+                        "
+                    >
+                        ${i + 1}
+                    </td>
+
+                    <td>
+
+                        <div class="td-main">
+
+                            <span class="td-id">
+                                ${esc(String(item.id))}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+                    <td
+                        style="
+                            text-align:center;
+                            font-weight:600;
+                        "
+                    >
+                        ${Number(item.count || 0)}
+                    </td>
+
+                    <td
+                        style="text-align:right;"
+                        class="td-sub"
+                    >
+                        ${fmt.usd(
+                            item.totalPayoutUSD || 0
+                        )}
+                    </td>
+
+                    <td
+                        style="text-align:right;"
+                        class="td-money"
+                    >
+                        ${fmt.idr(
+                            item.finalNetIDR || 0
+                        )}
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       ESCAPE HTML
+    ======================================================== */
+
+    function esc(str) {
+
+        return String(str)
+            .replace(
+                /&/g,
+                '&amp;'
+            )
+            .replace(
+                /</g,
+                '&lt;'
+            )
+            .replace(
+                />/g,
+                '&gt;'
+            )
+            .replace(
+                /"/g,
+                '&quot;'
+            );
+
+    }
+
+
+    /* ========================================================
+       MODAL
+    ======================================================== */
+
+    function openModal(
+        id,
+        isAggregatedView = false
+    ) {
+
+        let item;
+
+
+        if (isAggregatedView) {
+
+            const agg = {
+
+                id: id,
+
+                count: 0,
+
+                countries: {}
+
+            };
+
+
+            allRows.forEach(d => {
+
+                if (d.id === id) {
+
+                    agg.count +=
+                        Number(d.count) || 0;
+
+
+                    if (d.countries) {
+
+                        for (
+                            let [
+                                code,
+                                data
+                            ]
+                            of Object.entries(
+                                d.countries
+                            )
+                        ) {
+
+                            if (
+                                !agg.countries[
+                                    code
+                                ]
+                            ) {
+
+                                agg.countries[
+                                    code
+                                ] = {
+
+                                    count: 0,
+
+                                    totalUSD: 0
+
+                                };
+
+                            }
+
+
+                            agg.countries[
+                                code
+                            ].count +=
+                                Number(
+                                    data.count
+                                ) || 0;
+
+
+                            agg.countries[
+                                code
+                            ].totalUSD +=
+                                Number(
+                                    data.totalUSD
+                                ) || 0;
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+
+            item = agg;
+
+        } else {
+
+            item =
+                allRows.find(
+                    d =>
+                        d.id === id &&
+                        d.category ===
+                        currentSegmentView
+                );
+
+        }
+
+
+        if (
+            !item ||
+            !item.countries ||
+            Object.keys(
+                item.countries
+            ).length === 0
+        ) {
+
+            showToast(
+                'Detail negara tidak tersedia.',
+                'error'
+            );
+
+            return;
+
+        }
+
+
+        document
+            .getElementById(
+                'modalTitle'
+            )
+            .textContent =
+            id +
+            (
+                isAggregatedView
+                    ? ' (Global)'
+                    : ''
+            );
+
+
+        const tbody =
+            document.getElementById(
+                'modalBody'
+            );
+
+
+        tbody.innerHTML = '';
+
+
+        const sortedCountries =
+            Object.entries(
+                item.countries
+            )
+            .sort(
+                (a, b) =>
+                    b[1].count -
+                    a[1].count
+            );
+
+
+        sortedCountries.forEach(
+            ([code, data]) => {
+
+                const countryName =
+                    COUNTRY_MAP[code] ||
+                    code;
+
+
+                const flagUrl =
+                    `https://jennyhebya.github.io/country_flags/${code.toUpperCase()}.svg`;
+
+
+                const tr =
+                    document.createElement('tr');
+
+
+                tr.innerHTML = `
+
+                    <td
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:10px;
+                            padding:12px 0;
+                        "
+                    >
+
+                        <img
+                            src="${flagUrl}"
+                            width="20"
+                            height="14"
+                            style="
+                                border-radius:2px;
+                                box-shadow:
+                                    0 1px 2px
+                                    rgba(0,0,0,0.2);
+                            "
+                            onerror="
+                                this.style.display='none'
+                            "
+                        >
+
+                        <span>
+                            ${esc(countryName)}
+                        </span>
+
+                    </td>
+
+                    <td
+                        style="
+                            text-align:center;
+                            font-weight:600;
+                        "
+                    >
+                        ${Number(data.count || 0)}
+                    </td>
+
+                    <td
+                        style="
+                            text-align:right;
+                            color:var(--primary);
+                            font-weight:600;
+                        "
+                    >
+                        ${fmt.usd(
+                            data.totalUSD || 0
+                        )}
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+
+        document
+            .getElementById('modal')
+            .classList.add('active');
+
+    }
+
+
+    /* ========================================================
+       CLOSE MODAL
+    ======================================================== */
+
+    function closeModal(e) {
+
+        if (
+            e &&
+            e.target !== e.currentTarget
+        ) {
+
+            return;
+
+        }
+
+
+        document
+            .getElementById('modal')
+            .classList.remove('active');
+
+    }
+
+
+    /* ========================================================
+       AUTO LOAD
+    ======================================================== */
+
+    window.addEventListener(
+        'DOMContentLoaded',
+        () => {
+
+            loadData();
+
+        }
+    );
+
 </script>
+
 </body>
 </html>
